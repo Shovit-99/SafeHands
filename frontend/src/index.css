@@ -294,3 +294,19 @@ h1, h2, h3, h4, h5, h6 {
 .leaflet-popup-tip {
   background: #1e2537 !important;
 }
+
+/* ─── Fade-in animation (step transitions) ──────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease forwards;
+}
+
+/* ─── Font display utility ──────────────────────────────────────────────────── */
+.font-display {
+  font-family: var(--font-family-display);
+}
+

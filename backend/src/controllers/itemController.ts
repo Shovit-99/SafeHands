@@ -185,3 +185,30 @@ export const deleteItem = async (
     res.status(500).json({ success: false, message: 'Failed to delete item.' });
   }
 };
+
+// ─── Get My Items (Authenticated user's own items) ────────────────────────────
+export const getMyItems = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const items = await Item.find({ reporterId: req.user!.id })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      data: items,
+      pagination: {
+        total: items.length,
+        page: 1,
+        pages: 1,
+        limit: items.length,
+      },
+    });
+  } catch {
+    res
+      .status(500)
+      .json({ success: false, message: 'Failed to fetch your items.' });
+  }
+};
+

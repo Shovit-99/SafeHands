@@ -38,7 +38,7 @@ const MessageSchema = new Schema<IMessage>(
 MessageSchema.index({ chatId: 1, createdAt: 1 });
 
 // Expose createdAt as timestamp for frontend convenience
-MessageSchema.virtual('timestamp').get(function () {
+MessageSchema.virtual('timestamp').get(function (this: { createdAt?: Date }) {
   return this.createdAt;
 });
 
