@@ -32,19 +32,28 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
     >
       {/* Image */}
-      <div className="aspect-[4/3] bg-white/5 relative overflow-hidden">
+      <div className="aspect-[4/3] relative overflow-hidden" style={{ background: 'rgba(11,15,23,0.8)' }}>
         {item.images?.[0] ? (
           <img
             src={item.images[0]}
             alt={item.title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-400"
+            style={{ transition: 'transform 0.4s ease' }}
             loading="lazy"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Tag size={32} className="text-slate-600" />
+            <Tag size={32} style={{ color: '#1a2235' }} />
           </div>
         )}
+
+        {/* Gradient overlay */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to top, rgba(6,8,12,0.7) 0%, transparent 50%)',
+          }}
+        />
 
         {/* Status badge overlay */}
         <div className="absolute top-3 left-3">
@@ -53,7 +62,14 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
 
         {/* Image count */}
         {item.images?.length > 1 && (
-          <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-0.5 rounded-full">
+          <div
+            className="absolute top-3 right-3 text-white text-xs px-2 py-0.5 rounded-full"
+            style={{
+              background: 'rgba(6,8,12,0.7)',
+              backdropFilter: 'blur(6px)',
+              border: '1px solid rgba(255,255,255,0.1)',
+            }}
+          >
             +{item.images.length - 1}
           </div>
         )}
@@ -61,26 +77,34 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
 
       {/* Content */}
       <div className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="font-semibold text-white text-sm leading-tight line-clamp-1">
+        <div className="flex items-start justify-between gap-2 mb-1.5">
+          <h3 className="font-semibold text-white text-sm leading-tight line-clamp-1" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
             {item.title}
           </h3>
-          <span className="text-xs text-slate-500 bg-white/5 px-2 py-0.5 rounded-full whitespace-nowrap flex-shrink-0">
+          <span
+            className="text-xs flex-shrink-0 px-2 py-0.5 rounded-full whitespace-nowrap"
+            style={{
+              background: 'rgba(0,212,184,0.07)',
+              color: '#5ff0de',
+              border: '1px solid rgba(0,212,184,0.13)',
+              fontSize: '0.7rem',
+            }}
+          >
             {item.category}
           </span>
         </div>
 
-        <p className="text-slate-400 text-xs line-clamp-2 mb-3 leading-relaxed">
+        <p className="text-xs line-clamp-2 mb-3 leading-relaxed" style={{ color: '#64748b' }}>
           {item.description}
         </p>
 
-        <div className="flex items-center justify-between text-xs text-slate-500">
+        <div className="flex items-center justify-between" style={{ fontSize: '0.72rem', color: '#475569' }}>
           <div className="flex items-center gap-1">
-            <MapPin size={11} />
-            <span className="truncate max-w-[120px]">{item.locationName}</span>
+            <MapPin size={10} />
+            <span className="truncate max-w-[110px]">{item.locationName}</span>
           </div>
           <div className="flex items-center gap-1">
-            <Clock size={11} />
+            <Clock size={10} />
             <span>{timeAgo(item.createdAt)}</span>
           </div>
         </div>

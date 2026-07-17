@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Package, Search, Plus, LogOut, User, Shield, Bell } from 'lucide-react';
+import { Package, Search, Plus, LogOut, User, Shield, MessageCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar: React.FC = () => {
@@ -14,46 +14,72 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className="sticky top-0 z-50 border-b border-white/[0.07]"
-      style={{ background: 'rgba(13, 17, 23, 0.85)', backdropFilter: 'blur(16px)' }}
+      className="sticky top-0 z-50"
+      style={{
+        background: 'rgba(6, 8, 12, 0.85)',
+        backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(0, 212, 184, 0.08)',
+      }}
     >
       <div className="page-container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group" id="nav-logo">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center transition-transform group-hover:scale-105">
-              <Package size={16} className="text-white" />
+            <div
+              className="w-8 h-8 rounded-xl flex items-center justify-center transition-all group-hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #00bfa5 0%, #5ff0de 100%)',
+                boxShadow: '0 0 16px rgba(0, 212, 184, 0.3)',
+              }}
+            >
+              <Package size={15} style={{ color: '#06080c' }} />
             </div>
-            <span className="text-lg font-bold gradient-text">LostHub</span>
+            <span
+              className="text-lg font-bold gradient-text"
+              style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+            >
+              LostHub
+            </span>
           </Link>
 
           {/* Center Nav */}
           <div className="hidden md:flex items-center gap-1">
             <Link
               to="/"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 text-sm font-medium transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-slate-400 hover:text-white text-sm font-medium transition-all hover:bg-white/5"
               id="nav-browse"
             >
-              <Search size={14} />
+              <Search size={13} />
               Browse
             </Link>
             {isAuthenticated && (
               <Link
                 to="/report"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 text-sm font-medium transition-all"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-slate-400 hover:text-white text-sm font-medium transition-all hover:bg-white/5"
                 id="nav-report"
               >
-                <Plus size={14} />
+                <Plus size={13} />
                 Report Item
+              </Link>
+            )}
+            {isAuthenticated && (
+              <Link
+                to="/chat"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-slate-400 hover:text-white text-sm font-medium transition-all hover:bg-white/5"
+                id="nav-chat"
+              >
+                <MessageCircle size={13} />
+                Messages
               </Link>
             )}
             {isAdmin && (
               <Link
                 to="/admin"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-violet-400 hover:text-violet-300 hover:bg-violet-500/10 text-sm font-medium transition-all"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium transition-all"
+                style={{ color: '#00d4b8' }}
                 id="nav-admin"
               >
-                <Shield size={14} />
+                <Shield size={13} />
                 Admin
               </Link>
             )}
@@ -63,19 +89,20 @@ const Navbar: React.FC = () => {
           <div className="flex items-center gap-2">
             {isAuthenticated ? (
               <>
-                <button
-                  className="relative p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-all"
-                  id="nav-notifications"
-                >
-                  <Bell size={18} />
-                </button>
                 <Link
                   to="/profile"
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-all"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-white/5 transition-all"
                   id="nav-profile"
                 >
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center">
-                    <User size={13} className="text-white" />
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                    style={{
+                      background: 'linear-gradient(135deg, #00bfa5 0%, #5ff0de 100%)',
+                      color: '#06080c',
+                      fontFamily: 'Space Grotesk, sans-serif',
+                    }}
+                  >
+                    {user?.name?.charAt(0).toUpperCase()}
                   </div>
                   <span className="hidden sm:block text-sm font-medium text-slate-300 max-w-[100px] truncate">
                     {user?.name?.split(' ')[0]}
@@ -83,11 +110,11 @@ const Navbar: React.FC = () => {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                  className="p-2 rounded-full text-slate-500 hover:text-red-400 transition-all hover:bg-red-500/10"
                   title="Sign out"
                   id="nav-logout"
                 >
-                  <LogOut size={16} />
+                  <LogOut size={15} />
                 </button>
               </>
             ) : (

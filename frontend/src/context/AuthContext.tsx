@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { User } from '../types';
 import api from '../api/axios';
+import { disconnectSocket } from '../hooks/useSocket';
 
 interface AuthContextType {
   user: User | null;
@@ -66,6 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem('losthub_user');
     setToken(null);
     setUser(null);
+    disconnectSocket();
   };
 
   return (
