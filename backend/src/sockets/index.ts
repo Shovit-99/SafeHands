@@ -32,6 +32,9 @@ export const initializeSocket = (httpServer: HttpServer): SocketServer => {
     const user = socket.data.user;
     console.log(`🔌 Socket connected: ${user.email} (${socket.id})`);
 
+    // ─── Join Personal Room ──────────────────────────────────────────────────
+    socket.join(`user:${user.id}`);
+
     // ─── Join Item Room (for match alerts) ──────────────────────────────────
     socket.on('join:item', (itemId: string) => {
       socket.join(`item:${itemId}`);
@@ -63,7 +66,8 @@ export const initializeSocket = (httpServer: HttpServer): SocketServer => {
           messageText,
         });
 
-        io.to(`chat:${chatId}`).emit('message:receive', saved);
+        // Emit to both sender and receiver's personal rooms so they get it anywhere in the app
+        io.to(`user:${user.id}`).to(`user:${receiverId}`).emit('message:receive', saved);
       }
     );
 

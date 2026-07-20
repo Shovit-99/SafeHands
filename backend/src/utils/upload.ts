@@ -1,17 +1,35 @@
 import multer from 'multer';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
-import cloudinary from '../config/cloudinary';
 
-// ─── Cloudinary Storage Engine ────────────────────────────────────────────────
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: async (_req, file) => ({
-    folder: 'losthub/items',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
-    transformation: [{ width: 1200, height: 900, crop: 'limit', quality: 85 }],
-    public_id: `${Date.now()}-${file.originalname.replace(/\s+/g, '_')}`,
-  }),
-});
+// ─── Check if Cloudinary is configured ───────────────────────────────────────
+const cloudinaryConfigured = !!(
+  process.env.CLOUDINARY_CLOUD_NAME &&
+  process.env.CLOUDINARY_API_KEY &&
+  process.env.CLOUDINARY_API_SECRET
+);
+
+let storage: multer.StorageEngine;
+
+if (cloudinaryConfigured) {
+  // ── Cloudinary Storage Engine (only when credentials are provided) ──────────
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const cloudinary = require('../config/cloudinary').default;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+  storage = new CloudinaryStorage({
+    cloudinary,
+    params: async (_req: unknown, file: Express.Multer.File) => ({
+      folder: 'losthub/items',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+      transformation: [{ width: 1200, height: 900, crop: 'limit', quality: 85 }],
+      public_id: `${Date.now()}-${file.originalname.replace(/\s+/g, '_')}`,
+    }),
+  }) as multer.StorageEngine;
+} else {
+  // ── Memory Storage fallback (no Cloudinary) ─────────────────────────────────
+  console.warn('⚠️  Cloudinary not configured — images stored in memory (not persisted).');
+  storage = multer.memoryStorage();
+}
 
 // ─── File Filter ──────────────────────────────────────────────────────────────
 const fileFilter: multer.Options['fileFilter'] = (_req, file, cb) => {

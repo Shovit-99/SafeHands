@@ -33,46 +33,49 @@ interface StatCardProps {
 const StatCard: React.FC<StatCardProps> = ({ label, value, iconBg, icon, onClick, active }) => (
   <button
     onClick={onClick}
-    className="glass-card p-5 text-left w-full transition-all"
-    style={active ? { borderColor: 'rgba(0,212,184,0.3)', background: 'rgba(0,212,184,0.04)' } : {}}
+    className="p-5 text-left w-full transition-all shadow-sm rounded-3xl"
+    style={{
+      background: active ? 'var(--accent-light)' : 'var(--card-bg)',
+      border: active ? '1px solid var(--accent-primary)' : '1px solid var(--divider)',
+    }}
     id={`stat-${label.toLowerCase().replace(' ', '-')}`}
   >
     <div
-      className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+      className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4"
       style={{ background: iconBg }}
     >
       {icon}
     </div>
     <div
-      className="text-3xl font-bold text-white mb-0.5"
-      style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+      className="text-3xl font-black text-[var(--text-primary)] mb-1"
+      style={{ fontFamily: 'var(--font-family-display)' }}
     >
       {value}
     </div>
-    <div style={{ fontSize: '0.8rem', color: '#4b5563' }}>{label}</div>
+    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>{label}</div>
   </button>
 );
 
 // ─── Delete Modal ─────────────────────────────────────────────────────────────
 interface DeleteModalProps { item: Item; onConfirm: () => void; onCancel: () => void; }
 const DeleteModal: React.FC<DeleteModalProps> = ({ item, onConfirm, onCancel }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(6,8,12,0.8)', backdropFilter: 'blur(8px)' }}>
-    <div className="glass-card p-6 max-w-sm w-full space-y-4" style={{ border: '1px solid rgba(239,68,68,0.15)' }}>
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}>
+    <div className="p-8 max-w-sm w-full space-y-5 rounded-3xl shadow-lg" style={{ background: 'var(--card-bg)', border: '1px solid rgba(239,68,68,0.3)' }}>
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(239,68,68,0.1)' }}>
-          <AlertTriangle size={18} style={{ color: '#fca5a5' }} />
+        <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(239,68,68,0.1)' }}>
+          <AlertTriangle size={20} style={{ color: '#ef4444' }} />
         </div>
-        <h3 className="font-semibold text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>Delete Item?</h3>
+        <h3 className="text-xl font-bold text-[var(--text-primary)]" style={{ fontFamily: 'var(--font-family-display)' }}>Delete Item?</h3>
       </div>
-      <p style={{ color: '#64748b', fontSize: '0.875rem' }}>
-        Permanently delete <strong className="text-white">"{item.title}"</strong>? This cannot be undone.
+      <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: 500 }}>
+        Permanently delete <strong className="text-[var(--text-primary)]">"{item.title}"</strong>? This cannot be undone.
       </p>
-      <div className="flex gap-3">
-        <button onClick={onCancel} className="btn-secondary flex-1 py-2.5 text-sm" id="admin-delete-cancel">Cancel</button>
+      <div className="flex gap-4 pt-2">
+        <button onClick={onCancel} className="px-6 py-3 rounded-2xl font-bold border transition-all hover:bg-black/5 dark:hover:bg-white/5 flex-1" style={{ color: 'var(--text-secondary)', borderColor: 'var(--divider)' }} id="admin-delete-cancel">Cancel</button>
         <button
           onClick={onConfirm}
-          className="flex-1 py-2.5 text-sm font-semibold rounded-full transition-all"
-          style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5' }}
+          className="flex-1 py-3 text-sm font-bold rounded-2xl transition-all shadow-md"
+          style={{ background: '#ef4444', color: '#ffffff' }}
           id="admin-delete-confirm"
         >
           Delete
@@ -153,10 +156,10 @@ const AdminPage: React.FC = () => {
 
   const statusSelectStyle = (s: ItemStatus) =>
     s === 'Lost'
-      ? { background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' }
+      ? { background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#ef4444' }
       : s === 'Found'
-      ? { background: 'rgba(0,212,184,0.1)', border: '1px solid rgba(0,212,184,0.25)', color: '#5ff0de' }
-      : { background: 'rgba(184,169,255,0.1)', border: '1px solid rgba(184,169,255,0.22)', color: '#c4b5fd' };
+      ? { background: 'var(--accent-light)', border: '1px solid var(--accent-primary)', color: 'var(--accent-primary)' }
+      : { background: 'rgba(184,169,255,0.1)', border: '1px solid rgba(184,169,255,0.22)', color: '#8b5cf6' };
 
   return (
     <>
@@ -164,78 +167,79 @@ const AdminPage: React.FC = () => {
         <DeleteModal item={deleteTarget} onConfirm={handleDelete} onCancel={() => setDeleteTarget(null)} />
       )}
 
-      <div className="flex-1 page-container py-10">
+      <div className="flex-1 page-container py-12 transition-colors duration-300">
         {/* ─── Header ─────────────────────────────────────────────────────── */}
         <div className="flex items-center justify-between mb-10">
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-3">
               <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center"
-                style={{ background: 'rgba(0,212,184,0.1)' }}
+                className="w-8 h-8 rounded-xl flex items-center justify-center"
+                style={{ background: 'var(--accent-light)' }}
               >
-                <Shield size={14} style={{ color: '#00d4b8' }} />
+                <Shield size={16} style={{ color: 'var(--accent-primary)' }} />
               </div>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#00d4b8', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--accent-primary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                 Admin Dashboard
               </span>
             </div>
-            <h1 className="text-3xl font-bold text-white" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+            <h1 className="text-4xl font-black text-[var(--text-primary)]" style={{ fontFamily: 'var(--font-family-display)' }}>
               Item Management
             </h1>
-            <p style={{ color: '#4b5563', fontSize: '0.875rem', marginTop: '4px' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '6px', fontWeight: 500 }}>
               Moderate reports, update statuses, and manage the marketplace.
             </p>
           </div>
           <button
             onClick={() => { void fetchItems(); void fetchStats(); }}
-            className="btn-secondary text-xs px-4 py-2"
+            className="btn-secondary text-sm px-5 py-2.5 font-bold shadow-sm"
             id="admin-refresh"
           >
-            <RefreshCw size={13} /> Refresh
+            <RefreshCw size={16} /> Refresh
           </button>
         </div>
 
         {/* ─── Stats ──────────────────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <StatCard
             label="Total Items" value={stats.total}
-            iconBg="rgba(0,212,184,0.1)" iconColor="#00d4b8"
-            icon={<BarChart3 size={18} style={{ color: '#00d4b8' }} />}
+            iconBg="var(--accent-light)" iconColor="var(--accent-primary)"
+            icon={<BarChart3 size={20} style={{ color: 'var(--accent-primary)' }} />}
             onClick={clearFilters}
           />
           <StatCard
             label="Lost" value={stats.lost}
-            iconBg="rgba(239,68,68,0.1)" iconColor="#fca5a5"
-            icon={<Package size={18} style={{ color: '#fca5a5' }} />}
+            iconBg="rgba(239,68,68,0.1)" iconColor="#ef4444"
+            icon={<Package size={20} style={{ color: '#ef4444' }} />}
             onClick={() => { setFilterStatus('Lost'); setPage(1); }}
             active={filterStatus === 'Lost'}
           />
           <StatCard
             label="Found" value={stats.found}
-            iconBg="rgba(0,212,184,0.1)" iconColor="#5ff0de"
-            icon={<CheckCircle2 size={18} style={{ color: '#5ff0de' }} />}
+            iconBg="var(--accent-light)" iconColor="var(--accent-primary)"
+            icon={<CheckCircle2 size={20} style={{ color: 'var(--accent-primary)' }} />}
             onClick={() => { setFilterStatus('Found'); setPage(1); }}
             active={filterStatus === 'Found'}
           />
           <StatCard
             label="Claimed" value={stats.claimed}
-            iconBg="rgba(184,169,255,0.1)" iconColor="#c4b5fd"
-            icon={<CheckCircle2 size={18} style={{ color: '#c4b5fd' }} />}
+            iconBg="rgba(139,92,246,0.1)" iconColor="#8b5cf6"
+            icon={<CheckCircle2 size={20} style={{ color: '#8b5cf6' }} />}
             onClick={() => { setFilterStatus('Claimed'); setPage(1); }}
             active={filterStatus === 'Claimed'}
           />
         </div>
 
         {/* ─── Filters ────────────────────────────────────────────────────── */}
-        <div className="glass-card p-4 mb-6" style={{ border: '1px solid rgba(0,212,184,0.07)' }}>
-          <form onSubmit={handleSearch} className="flex flex-wrap gap-3 items-end">
-            <div className="flex-1 min-w-[180px]">
-              <label className="block text-xs mb-1.5 font-medium" style={{ color: '#4b5563' }}>Search</label>
+        <div className="p-6 mb-8 rounded-3xl shadow-sm" style={{ background: 'var(--card-bg)', border: '1px solid var(--divider)' }}>
+          <form onSubmit={handleSearch} className="flex flex-wrap gap-4 items-end">
+            <div className="flex-1 min-w-[200px]">
+              <label className="block text-xs mb-2 font-bold" style={{ color: 'var(--text-secondary)' }}>Search</label>
               <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#4b5563' }} />
+                <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-secondary)' }} />
                 <input
                   type="text"
-                  className="input-field pl-9 h-9 text-sm"
+                  className="input-field pl-11 h-11 text-sm rounded-xl shadow-sm"
+                  style={{ background: 'var(--bg-color)', border: '1px solid var(--divider)' }}
                   placeholder="Search items..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -244,62 +248,64 @@ const AdminPage: React.FC = () => {
               </div>
             </div>
             <div>
-              <label className="block text-xs mb-1.5 font-medium" style={{ color: '#4b5563' }}>Status</label>
+              <label className="block text-xs mb-2 font-bold" style={{ color: 'var(--text-secondary)' }}>Status</label>
               <select
                 value={filterStatus}
                 onChange={(e) => { setFilterStatus(e.target.value as ItemStatus | ''); setPage(1); }}
-                className="input-field h-9 text-sm py-0 px-3 w-auto"
+                className="input-field h-11 text-sm py-0 px-4 w-auto rounded-xl shadow-sm"
+                style={{ background: 'var(--bg-color)', border: '1px solid var(--divider)' }}
                 id="admin-filter-status"
               >
                 {STATUSES.map((s) => <option key={s} value={s}>{s || 'All Statuses'}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs mb-1.5 font-medium" style={{ color: '#4b5563' }}>Category</label>
+              <label className="block text-xs mb-2 font-bold" style={{ color: 'var(--text-secondary)' }}>Category</label>
               <select
                 value={filterCategory}
                 onChange={(e) => { setFilterCategory(e.target.value as ItemCategory | ''); setPage(1); }}
-                className="input-field h-9 text-sm py-0 px-3 w-auto"
+                className="input-field h-11 text-sm py-0 px-4 w-auto rounded-xl shadow-sm"
+                style={{ background: 'var(--bg-color)', border: '1px solid var(--divider)' }}
                 id="admin-filter-category"
               >
                 {CATEGORIES.map((c) => <option key={c} value={c}>{c || 'All Categories'}</option>)}
               </select>
             </div>
-            <button type="submit" className="btn-primary h-9 px-5 text-sm" id="admin-search-btn">
-              <Search size={13} /> Search
+            <button type="submit" className="btn-primary h-11 px-6 text-sm font-bold shadow-md rounded-xl" id="admin-search-btn">
+              <Search size={16} className="mr-1.5" /> Search
             </button>
             {hasFilters && (
-              <button type="button" onClick={clearFilters} className="btn-secondary h-9 px-3 text-sm" id="admin-clear-filters">
-                <X size={13} /> Clear
+              <button type="button" onClick={clearFilters} className="btn-secondary h-11 px-5 text-sm font-bold shadow-sm rounded-xl" id="admin-clear-filters">
+                <X size={16} className="mr-1.5" /> Clear
               </button>
             )}
           </form>
-          <p style={{ fontSize: '0.75rem', color: '#374151', marginTop: '8px' }}>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '12px', fontWeight: 600 }}>
             {loading ? '…' : `${totalItems} items found`}
           </p>
         </div>
 
         {/* ─── Table ──────────────────────────────────────────────────────── */}
         {loading ? (
-          <div className="flex justify-center py-20">
-            <Loader2 size={30} className="animate-spin" style={{ color: '#00d4b8' }} />
+          <div className="flex justify-center py-24">
+            <Loader2 size={36} className="animate-spin" style={{ color: 'var(--accent-primary)' }} />
           </div>
         ) : items.length === 0 ? (
-          <div className="text-center py-16 glass-card">
-            <Package size={40} style={{ color: '#1a2235', margin: '0 auto 1rem' }} />
-            <h3 className="text-lg font-bold text-white mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>No items found</h3>
-            <p style={{ color: '#4b5563', fontSize: '0.875rem' }}>Try adjusting your filters.</p>
+          <div className="text-center py-20 rounded-3xl shadow-sm" style={{ background: 'var(--card-bg)', border: '1px solid var(--divider)' }}>
+            <Package size={48} style={{ color: 'var(--text-secondary)', margin: '0 auto 1.5rem', opacity: 0.5 }} />
+            <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2" style={{ fontFamily: 'var(--font-family-display)' }}>No items found</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: 500 }}>Try adjusting your filters.</p>
           </div>
         ) : (
-          <div className="glass-card overflow-hidden" style={{ border: '1px solid rgba(0,212,184,0.07)' }}>
+          <div className="overflow-hidden rounded-3xl shadow-sm" style={{ background: 'var(--card-bg)', border: '1px solid var(--divider)' }}>
             {/* Table header */}
             <div
-              className="grid gap-4 px-5 py-3 text-xs font-semibold uppercase tracking-wider"
+              className="grid gap-4 px-6 py-4 text-[0.75rem] font-bold uppercase tracking-wider"
               style={{
                 gridTemplateColumns: '3fr 1fr 1fr 1fr auto',
-                background: 'rgba(0,212,184,0.03)',
-                borderBottom: '1px solid rgba(0,212,184,0.07)',
-                color: '#374151',
+                background: 'var(--bg-color)',
+                borderBottom: '1px solid var(--divider)',
+                color: 'var(--text-secondary)',
               }}
             >
               <span>Item</span>
@@ -312,24 +318,22 @@ const AdminPage: React.FC = () => {
             {items.map((item) => (
               <div
                 key={item._id}
-                className="grid gap-4 px-5 py-4 items-center transition-all"
+                className="grid gap-4 px-6 py-5 items-center transition-all group"
                 style={{
                   gridTemplateColumns: '3fr 1fr 1fr 1fr auto',
-                  borderBottom: '1px solid rgba(255,255,255,0.04)',
+                  borderBottom: '1px solid var(--divider)',
                 }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(0,212,184,0.02)'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
               >
                 <div className="min-w-0">
-                  <p className="font-medium text-white text-sm truncate" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+                  <p className="font-bold text-[var(--text-primary)] text-sm truncate" style={{ fontFamily: 'var(--font-family-display)' }}>
                     {item.title}
                   </p>
-                  <p className="text-xs truncate mt-0.5" style={{ color: '#4b5563' }}>{item.locationName}</p>
+                  <p className="text-xs truncate mt-1 font-medium" style={{ color: 'var(--text-secondary)' }}>{item.locationName}</p>
                 </div>
 
                 <span
-                  className="text-xs px-2.5 py-1 rounded-full w-fit"
-                  style={{ background: 'rgba(0,212,184,0.07)', color: '#5ff0de', border: '1px solid rgba(0,212,184,0.13)' }}
+                  className="text-xs px-3 py-1.5 rounded-full w-fit font-bold shadow-sm"
+                  style={{ background: 'var(--bg-color)', color: 'var(--text-secondary)', border: '1px solid var(--divider)' }}
                 >
                   {item.category}
                 </span>
@@ -337,41 +341,41 @@ const AdminPage: React.FC = () => {
                 <select
                   value={item.status}
                   onChange={(e) => void handleStatusChange(item._id, e.target.value as ItemStatus)}
-                  className="text-xs rounded-full px-2.5 py-1 outline-none cursor-pointer transition-colors"
+                  className="text-xs rounded-full px-3 py-1.5 outline-none cursor-pointer transition-colors font-bold shadow-sm"
                   style={statusSelectStyle(item.status)}
                   id={`admin-status-${item._id}`}
                 >
                   {(['Lost', 'Found', 'Claimed'] as ItemStatus[]).map((s) => (
-                    <option key={s} value={s} style={{ background: '#111827', color: '#e2e8f0' }}>{s}</option>
+                    <option key={s} value={s} style={{ background: 'var(--bg-color)', color: 'var(--text-primary)' }}>{s}</option>
                   ))}
                 </select>
 
-                <span className="text-xs truncate" style={{ color: '#4b5563' }}>
+                <span className="text-xs truncate font-bold" style={{ color: 'var(--text-secondary)' }}>
                   {item.reporterId?.name || 'Unknown'}
                 </span>
 
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-2">
                   <button
                     onClick={() => navigate(`/items/${item._id}`)}
-                    className="p-1.5 rounded-lg transition-all"
-                    style={{ color: '#374151' }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#00d4b8'; (e.currentTarget as HTMLElement).style.background = 'rgba(0,212,184,0.08)'; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#374151'; (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                    className="p-2 rounded-xl transition-all shadow-sm"
+                    style={{ color: 'var(--text-secondary)', background: 'var(--bg-color)', border: '1px solid var(--divider)' }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--accent-primary)'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent-primary)'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--divider)'; }}
                     title="View"
                     id={`admin-view-${item._id}`}
                   >
-                    <ExternalLink size={14} />
+                    <ExternalLink size={16} />
                   </button>
                   <button
                     onClick={() => setDeleteTarget(item)}
-                    className="p-1.5 rounded-lg transition-all"
-                    style={{ color: '#374151' }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#fca5a5'; (e.currentTarget as HTMLElement).style.background = 'rgba(239,68,68,0.1)'; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#374151'; (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                    className="p-2 rounded-xl transition-all shadow-sm"
+                    style={{ color: 'var(--text-secondary)', background: 'var(--bg-color)', border: '1px solid var(--divider)' }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#ef4444'; (e.currentTarget as HTMLElement).style.borderColor = '#ef4444'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--divider)'; }}
                     title="Delete"
                     id={`admin-del-${item._id}`}
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={16} />
                   </button>
                 </div>
               </div>
@@ -381,11 +385,12 @@ const AdminPage: React.FC = () => {
 
         {/* ─── Pagination ─────────────────────────────────────────────────── */}
         {totalPages > 1 && (
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex justify-center gap-2 mt-10">
             <button
               onClick={() => setPage((p) => Math.max(p - 1, 1))}
               disabled={page === 1}
-              className="btn-secondary text-sm px-4 py-2 disabled:opacity-30"
+              className="px-4 py-2 rounded-2xl font-bold border flex items-center justify-center transition-all hover:bg-black/5 dark:hover:bg-white/5 text-sm disabled:opacity-30 disabled:pointer-events-none"
+              style={{ color: 'var(--text-secondary)', borderColor: 'var(--divider)' }}
               id="admin-prev-page"
             >
               Previous
@@ -394,10 +399,10 @@ const AdminPage: React.FC = () => {
               <button
                 key={i}
                 onClick={() => setPage(i + 1)}
-                className="w-9 h-9 rounded-full text-sm font-semibold transition-all"
+                className="w-10 h-10 rounded-full text-sm font-black transition-all shadow-sm"
                 style={page === i + 1
-                  ? { background: 'linear-gradient(135deg, #00bfa5, #5ff0de)', color: '#06080c', boxShadow: '0 4px 16px rgba(0,212,184,0.35)' }
-                  : { background: 'rgba(255,255,255,0.04)', color: '#4b5563', border: '1px solid rgba(255,255,255,0.07)' }
+                  ? { background: 'var(--accent-gradient)', color: '#ffffff', boxShadow: '0 4px 16px var(--accent-light)' }
+                  : { background: 'var(--card-bg)', color: 'var(--text-secondary)', border: '1px solid var(--divider)' }
                 }
                 id={`admin-page-${i + 1}`}
               >
@@ -407,7 +412,8 @@ const AdminPage: React.FC = () => {
             <button
               onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
               disabled={page === totalPages}
-              className="btn-secondary text-sm px-4 py-2 disabled:opacity-30"
+              className="px-4 py-2 rounded-2xl font-bold border flex items-center justify-center transition-all hover:bg-black/5 dark:hover:bg-white/5 text-sm disabled:opacity-30 disabled:pointer-events-none"
+              style={{ color: 'var(--text-secondary)', borderColor: 'var(--divider)' }}
               id="admin-next-page"
             >
               Next

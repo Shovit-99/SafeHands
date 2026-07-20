@@ -18,6 +18,11 @@ export interface ChatHistoryResponse {
   };
 }
 
+export const fetchConversations = async (): Promise<any[]> => {
+  const { data } = await api.get('/messages/conversations');
+  return data.data;
+};
+
 // ─── Fetch Chat History ───────────────────────────────────────────────────────
 export const fetchChatHistory = async (
   chatId: string,

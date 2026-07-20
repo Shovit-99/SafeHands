@@ -25,49 +25,54 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
 
   return (
     <div
-      className="item-card"
+      className="item-card group glass-card hover-lift"
       onClick={onClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
+      style={{
+        borderRadius: '1.5rem',
+        overflow: 'hidden',
+      }}
     >
       {/* Image */}
-      <div className="aspect-[4/3] relative overflow-hidden" style={{ background: 'rgba(11,15,23,0.8)' }}>
+      <div className="aspect-[4/3] relative overflow-hidden" style={{ background: 'var(--bg-color)' }}>
         {item.images?.[0] ? (
           <img
             src={item.images[0]}
             alt={item.title}
-            className="w-full h-full object-cover transition-transform duration-400"
-            style={{ transition: 'transform 0.4s ease' }}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Tag size={32} style={{ color: '#1a2235' }} />
+          <div className="w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+            <Tag size={40} style={{ color: 'var(--text-secondary)', opacity: 0.3 }} />
           </div>
         )}
 
         {/* Gradient overlay */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 opacity-60 transition-opacity group-hover:opacity-40"
           style={{
-            background: 'linear-gradient(to top, rgba(6,8,12,0.7) 0%, transparent 50%)',
+            background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)',
           }}
         />
 
         {/* Status badge overlay */}
-        <div className="absolute top-3 left-3">
-          <span className={STATUS_CLASSES[item.status]}>{item.status}</span>
+        <div className="absolute top-4 left-4">
+          <span className={STATUS_CLASSES[item.status]} style={{ padding: '0.4rem 1rem', fontSize: '0.75rem', fontWeight: 800, backdropFilter: 'blur(8px)' }}>
+            {item.status}
+          </span>
         </div>
 
         {/* Image count */}
         {item.images?.length > 1 && (
           <div
-            className="absolute top-3 right-3 text-white text-xs px-2 py-0.5 rounded-full"
+            className="absolute top-4 right-4 text-white text-xs px-2.5 py-1 rounded-full font-bold shadow-sm"
             style={{
-              background: 'rgba(6,8,12,0.7)',
-              backdropFilter: 'blur(6px)',
-              border: '1px solid rgba(255,255,255,0.1)',
+              background: 'rgba(0,0,0,0.4)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255,255,255,0.15)',
             }}
           >
             +{item.images.length - 1}
@@ -76,35 +81,33 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       </div>
 
       {/* Content */}
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-1.5">
-          <h3 className="font-semibold text-white text-sm leading-tight line-clamp-1" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3 mb-2">
+          <h3 className="font-bold text-lg leading-tight line-clamp-1" style={{ fontFamily: 'var(--font-family-display)', color: 'var(--text-primary)' }}>
             {item.title}
           </h3>
           <span
-            className="text-xs flex-shrink-0 px-2 py-0.5 rounded-full whitespace-nowrap"
+            className="text-xs flex-shrink-0 px-2.5 py-1 rounded-full whitespace-nowrap font-bold"
             style={{
-              background: 'rgba(0,212,184,0.07)',
-              color: '#5ff0de',
-              border: '1px solid rgba(0,212,184,0.13)',
-              fontSize: '0.7rem',
+              background: 'var(--accent-light)',
+              color: 'var(--accent-primary)',
             }}
           >
             {item.category}
           </span>
         </div>
 
-        <p className="text-xs line-clamp-2 mb-3 leading-relaxed" style={{ color: '#64748b' }}>
+        <p className="text-sm line-clamp-2 mb-4 leading-relaxed font-medium" style={{ color: 'var(--text-secondary)' }}>
           {item.description}
         </p>
 
-        <div className="flex items-center justify-between" style={{ fontSize: '0.72rem', color: '#475569' }}>
-          <div className="flex items-center gap-1">
-            <MapPin size={10} />
-            <span className="truncate max-w-[110px]">{item.locationName}</span>
+        <div className="flex items-center justify-between pt-4 border-t" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', borderColor: 'var(--divider)', fontWeight: 600 }}>
+          <div className="flex items-center gap-1.5">
+            <MapPin size={14} style={{ color: 'var(--accent-primary)' }} />
+            <span className="truncate max-w-[120px]">{item.locationName}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Clock size={10} />
+          <div className="flex items-center gap-1.5">
+            <Clock size={14} style={{ color: 'var(--accent-primary)' }} />
             <span>{timeAgo(item.createdAt)}</span>
           </div>
         </div>

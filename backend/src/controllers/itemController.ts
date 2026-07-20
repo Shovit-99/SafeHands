@@ -18,9 +18,11 @@ export const createItem = async (
         coordinates: { lat: number; lng: number };
       };
 
-    const images: string[] = (req.files as Express.Multer.File[])?.map(
-      (f) => (f as Express.Multer.File & { path: string }).path
-    ) ?? [];
+    // Cloudinary storage gives `f.path` (the Cloudinary URL).
+    // Memory storage gives no path — images are not persisted in that case.
+    const images: string[] = (req.files as Array<Express.Multer.File & { path?: string }>)
+      ?.map((f) => f.path ?? '')
+      .filter(Boolean) ?? [];
 
     const item = await Item.create({
       title,
@@ -60,7 +62,7 @@ export const getItems = async (req: Request, res: Response): Promise<void> => {
 
     const filter: Record<string, unknown> = {};
 
-    // Full-text search
+    // Full-text search (falls back to regex if text index not yet built)
     if (q && q.trim()) {
       filter.$text = { $search: q.trim() };
     }
@@ -72,14 +74,40 @@ export const getItems = async (req: Request, res: Response): Promise<void> => {
     const limitNum = Math.min(parseInt(limit, 10), 50);
     const skip = (pageNum - 1) * limitNum;
 
-    const [items, total] = await Promise.all([
-      Item.find(filter)
-        .populate('reporterId', 'name email')
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limitNum),
-      Item.countDocuments(filter),
-    ]);
+    let items: Awaited<ReturnType<typeof Item.find>>;
+    let total: number;
+
+    try {
+      [items, total] = await Promise.all([
+        Item.find(filter)
+          .populate('reporterId', 'name email')
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limitNum),
+        Item.countDocuments(filter),
+      ]);
+    } catch (textIndexErr) {
+      // Text index not ready — fall back to regex search
+      const fallbackFilter: Record<string, unknown> = {};
+      if (q && q.trim()) {
+        fallbackFilter.$or = [
+          { title: { $regex: q.trim(), $options: 'i' } },
+          { description: { $regex: q.trim(), $options: 'i' } },
+          { locationName: { $regex: q.trim(), $options: 'i' } },
+        ];
+      }
+      if (category) fallbackFilter.category = category;
+      if (status) fallbackFilter.status = status;
+
+      [items, total] = await Promise.all([
+        Item.find(fallbackFilter)
+          .populate('reporterId', 'name email')
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limitNum),
+        Item.countDocuments(fallbackFilter),
+      ]);
+    }
 
     res.status(200).json({
       success: true,
@@ -92,6 +120,7 @@ export const getItems = async (req: Request, res: Response): Promise<void> => {
       },
     });
   } catch (error) {
+    console.error('getItems error:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch items.' });
   }
 };

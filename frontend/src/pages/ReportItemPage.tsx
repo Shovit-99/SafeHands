@@ -28,14 +28,14 @@ const STATUSES: { value: ItemStatus; label: string; activeStyle: React.CSSProper
   {
     value: 'Lost',
     label: '🔴 Lost',
-    activeStyle: { background: 'rgba(239,68,68,0.12)', borderColor: 'rgba(239,68,68,0.4)', color: '#fca5a5' },
-    inactiveStyle: { background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)', color: '#4b5563' },
+    activeStyle: { background: 'rgba(239,68,68,0.1)', borderColor: 'rgba(239,68,68,0.4)', color: '#ef4444' },
+    inactiveStyle: { background: 'transparent', borderColor: 'var(--divider)', color: 'var(--text-secondary)' },
   },
   {
     value: 'Found',
     label: '🟢 Found',
-    activeStyle: { background: 'rgba(0,212,184,0.12)', borderColor: 'rgba(0,212,184,0.35)', color: '#5ff0de' },
-    inactiveStyle: { background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.08)', color: '#4b5563' },
+    activeStyle: { background: 'var(--accent-light)', borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)' },
+    inactiveStyle: { background: 'transparent', borderColor: 'var(--divider)', color: 'var(--text-secondary)' },
   },
 ];
 
@@ -50,33 +50,33 @@ const MapClickHandler: React.FC<MapClickHandlerProps> = ({ onMapClick }) => {
 const STEPS = ['Details', 'Location', 'Photos'];
 
 const StepIndicator: React.FC<{ current: number }> = ({ current }) => (
-  <div className="flex items-center justify-center gap-0 mb-10">
+  <div className="flex items-center justify-center gap-0 mb-12">
     {STEPS.map((label, i) => (
       <React.Fragment key={label}>
         <div className="flex flex-col items-center">
           <div
-            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all duration-300"
+            className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-black border-2 transition-all duration-300 shadow-sm"
             style={
               i < current
-                ? { background: 'linear-gradient(135deg, #00bfa5, #5ff0de)', borderColor: 'transparent', color: '#06080c', boxShadow: '0 0 12px rgba(0,212,184,0.4)' }
+                ? { background: 'var(--accent-gradient)', borderColor: 'transparent', color: '#ffffff', boxShadow: '0 4px 12px var(--accent-light)' }
                 : i === current
-                ? { borderColor: '#00d4b8', color: '#00d4b8', background: 'rgba(0,212,184,0.08)' }
-                : { borderColor: 'rgba(255,255,255,0.08)', color: '#374151', background: 'rgba(255,255,255,0.02)' }
+                ? { borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)', background: 'var(--accent-light)' }
+                : { borderColor: 'var(--divider)', color: 'var(--text-secondary)', background: 'var(--card-bg)' }
             }
           >
-            {i < current ? <CheckCircle2 size={16} /> : i + 1}
+            {i < current ? <CheckCircle2 size={18} /> : i + 1}
           </div>
           <span
-            className="text-xs mt-1.5 font-medium"
-            style={{ color: i <= current ? '#94a3b8' : '#374151' }}
+            className="text-xs mt-2 font-bold"
+            style={{ color: i <= current ? 'var(--text-primary)' : 'var(--text-secondary)' }}
           >
             {label}
           </span>
         </div>
         {i < STEPS.length - 1 && (
           <div
-            className="mb-5 mx-2 transition-all duration-500"
-            style={{ width: 48, height: 1, background: i < current ? '#00d4b8' : 'rgba(255,255,255,0.08)' }}
+            className="mb-6 mx-3 transition-all duration-500 rounded-full"
+            style={{ width: 64, height: 4, background: i < current ? 'var(--accent-primary)' : 'var(--divider)' }}
           />
         )}
       </React.Fragment>
@@ -86,9 +86,11 @@ const StepIndicator: React.FC<{ current: number }> = ({ current }) => (
 
 // ─── Section Header ───────────────────────────────────────────────────────────
 const SectionHeader: React.FC<{ icon: React.ReactNode; label: string }> = ({ icon, label }) => (
-  <div className="flex items-center gap-2 mb-2" style={{ color: '#00d4b8' }}>
-    {icon}
-    <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+  <div className="flex items-center gap-2.5 mb-4" style={{ color: 'var(--accent-primary)' }}>
+    <div className="p-1.5 rounded-lg" style={{ background: 'var(--accent-light)' }}>
+      {icon}
+    </div>
+    <span style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
       {label}
     </span>
   </div>
@@ -179,41 +181,42 @@ const ReportItemPage: React.FC = () => {
   };
 
   const cardStyle: React.CSSProperties = {
-    background: 'rgba(11,15,23,0.7)',
-    border: '1px solid rgba(0,212,184,0.09)',
-    borderRadius: '20px',
-    padding: '2rem',
+    background: 'var(--card-bg)',
+    border: '1px solid var(--divider)',
+    borderRadius: '24px',
+    padding: '2.5rem',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.04)',
   };
 
   return (
-    <div className="flex-1 page-container py-10 max-w-2xl">
-      <div className="mb-8">
+    <div className="flex-1 page-container py-12 max-w-3xl transition-colors duration-300">
+      <div className="mb-10 text-center">
         <h1
-          className="text-3xl font-bold text-white mb-1"
-          style={{ fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '-0.03em' }}
+          className="text-4xl font-black mb-3 tracking-tight text-[var(--text-primary)]"
+          style={{ fontFamily: 'var(--font-family-display)' }}
         >
           Report an Item
         </h1>
-        <p style={{ color: '#4b5563', fontSize: '0.9rem' }}>Help reunite lost items with their owners.</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', fontWeight: 500 }}>Help reunite lost items with their owners.</p>
       </div>
 
       <StepIndicator current={step} />
 
       {/* ─── Step 0: Details ────────────────────────────────────────────────── */}
       {step === 0 && (
-        <div style={cardStyle} className="animate-fadeIn space-y-6">
-          <SectionHeader icon={<Tag size={15} />} label="Item Details" />
+        <div style={cardStyle} className="animate-fadeIn space-y-8">
+          <SectionHeader icon={<Tag size={16} />} label="Item Details" />
 
           {/* Status selector */}
           <div>
-            <label className="block text-sm font-medium mb-3" style={{ color: '#94a3b8' }}>Item Type</label>
-            <div className="flex gap-3">
+            <label className="block text-sm font-bold mb-3" style={{ color: 'var(--text-secondary)' }}>Item Type</label>
+            <div className="flex gap-4">
               {STATUSES.map((s) => (
                 <button
                   key={s.value}
                   type="button"
                   onClick={() => setStatus(s.value)}
-                  className="flex-1 py-3 rounded-2xl border-2 text-sm font-semibold transition-all"
+                  className="flex-1 py-3.5 rounded-2xl border-2 text-base font-bold transition-all shadow-sm"
                   style={status === s.value ? s.activeStyle : s.inactiveStyle}
                   id={`status-${s.value}`}
                 >
@@ -225,33 +228,38 @@ const ReportItemPage: React.FC = () => {
 
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#94a3b8' }}>
-              Title <span style={{ color: '#f87171' }}>*</span>
+            <label className="block text-sm font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>
+              Title <span style={{ color: '#ef4444' }}>*</span>
             </label>
             <input
               type="text"
-              className="input-field"
+              className="input-field shadow-sm text-base h-12 rounded-xl"
+              style={{ background: 'var(--bg-color)', border: '1px solid var(--divider)' }}
               placeholder="e.g. Black AirPods Pro, Blue backpack..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={120}
               id="item-title"
             />
-            <div style={{ textAlign: 'right', fontSize: '0.72rem', color: '#374151', marginTop: '4px' }}>{title.length}/120</div>
+            <div style={{ textAlign: 'right', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '6px', fontWeight: 500 }}>{title.length}/120</div>
           </div>
 
           {/* Category grid */}
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#94a3b8' }}>
-              Category <span style={{ color: '#f87171' }}>*</span>
+            <label className="block text-sm font-bold mb-3" style={{ color: 'var(--text-secondary)' }}>
+              Category <span style={{ color: '#ef4444' }}>*</span>
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2.5">
               {CATEGORIES.map((c) => (
                 <button
                   key={c}
                   type="button"
                   onClick={() => setCategory(c)}
-                  className={`tag-pill ${category === c ? 'active' : 'inactive'}`}
+                  className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all ${category === c ? 'shadow-sm' : ''}`}
+                  style={category === c
+                    ? { background: 'var(--text-primary)', borderColor: 'var(--text-primary)', color: 'var(--bg-color)' }
+                    : { background: 'var(--bg-color)', borderColor: 'var(--divider)', color: 'var(--text-secondary)' }
+                  }
                   id={`cat-${c}`}
                 >
                   {c}
@@ -262,11 +270,12 @@ const ReportItemPage: React.FC = () => {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#94a3b8' }}>
-              Description <span style={{ color: '#f87171' }}>*</span>
+            <label className="block text-sm font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>
+              Description <span style={{ color: '#ef4444' }}>*</span>
             </label>
             <textarea
-              className="input-field resize-none"
+              className="input-field resize-none shadow-sm text-base rounded-xl"
+              style={{ background: 'var(--bg-color)', border: '1px solid var(--divider)' }}
               rows={4}
               placeholder="Describe the item — color, brand, distinguishing features..."
               value={description}
@@ -274,29 +283,30 @@ const ReportItemPage: React.FC = () => {
               maxLength={1000}
               id="item-description"
             />
-            <div style={{ textAlign: 'right', fontSize: '0.72rem', color: '#374151', marginTop: '4px' }}>{description.length}/1000</div>
+            <div style={{ textAlign: 'right', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '6px', fontWeight: 500 }}>{description.length}/1000</div>
           </div>
 
-          <button type="button" onClick={nextStep} className="btn-primary w-full py-3" id="step1-next">
-            Next: Location <ChevronRight size={16} />
+          <button type="button" onClick={nextStep} className="btn-primary w-full py-4 text-lg font-bold rounded-2xl shadow-md" id="step1-next">
+            Next: Location <ChevronRight size={20} className="ml-1" />
           </button>
         </div>
       )}
 
       {/* ─── Step 1: Location ───────────────────────────────────────────────── */}
       {step === 1 && (
-        <div style={cardStyle} className="animate-fadeIn space-y-6">
-          <SectionHeader icon={<Navigation size={15} />} label="Location" />
+        <div style={cardStyle} className="animate-fadeIn space-y-8">
+          <SectionHeader icon={<Navigation size={16} />} label="Location" />
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#94a3b8' }}>
-              Location Name <span style={{ color: '#f87171' }}>*</span>
+            <label className="block text-sm font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>
+              Location Name <span style={{ color: '#ef4444' }}>*</span>
             </label>
             <div className="relative">
-              <MapPin size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#4b5563' }} />
+              <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-secondary)' }} />
               <input
                 type="text"
-                className="input-field pl-10"
+                className="input-field pl-12 shadow-sm text-base h-12 rounded-xl"
+                style={{ background: 'var(--bg-color)', border: '1px solid var(--divider)' }}
                 placeholder="e.g. Library 2nd Floor, Cafeteria entrance..."
                 value={locationName}
                 onChange={(e) => setLocationName(e.target.value)}
@@ -306,14 +316,14 @@ const ReportItemPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#94a3b8' }}>
-              Pin on Map <span style={{ color: '#f87171' }}>*</span>
-              <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', color: '#374151', fontWeight: 400 }}>
+            <label className="block text-sm font-bold mb-3" style={{ color: 'var(--text-secondary)' }}>
+              Pin on Map <span style={{ color: '#ef4444' }}>*</span>
+              <span style={{ marginLeft: '0.5rem', fontSize: '0.8rem', fontWeight: 500 }}>
                 (click to place marker)
               </span>
             </label>
-            <div className="overflow-hidden" style={{ height: 320, borderRadius: 16, border: '1px solid rgba(0,212,184,0.12)' }}>
-              <MapContainer center={[20.5937, 78.9629]} zoom={5} style={{ height: '100%', width: '100%' }}>
+            <div className="overflow-hidden shadow-sm" style={{ height: 350, borderRadius: 20, border: '1px solid var(--divider)', background: 'var(--bg-color)' }}>
+              <MapContainer center={[20.5937, 78.9629]} zoom={5} style={{ height: '100%', width: '100%', zIndex: 10 }}>
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -323,21 +333,21 @@ const ReportItemPage: React.FC = () => {
               </MapContainer>
             </div>
             {coords ? (
-              <p className="flex items-center gap-1 mt-2" style={{ fontSize: '0.78rem', color: '#00d4b8' }}>
-                <CheckCircle2 size={12} />
+              <p className="flex items-center gap-1.5 mt-3 font-bold" style={{ fontSize: '0.85rem', color: 'var(--accent-primary)' }}>
+                <CheckCircle2 size={14} />
                 Pinned at {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}
               </p>
             ) : (
-              <p style={{ fontSize: '0.78rem', color: '#374151', marginTop: '8px' }}>No location pinned yet.</p>
+              <p className="font-medium" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '10px' }}>No location pinned yet.</p>
             )}
           </div>
 
-          <div className="flex gap-3">
-            <button type="button" onClick={prevStep} className="btn-secondary flex-1 py-3" id="step2-back">
-              <ChevronLeft size={16} /> Back
+          <div className="flex gap-4 pt-2">
+            <button type="button" onClick={prevStep} className="px-6 py-4 rounded-2xl font-bold border flex items-center justify-center transition-all hover:bg-black/5 dark:hover:bg-white/5" style={{ color: 'var(--text-secondary)', borderColor: 'var(--divider)' }} id="step2-back">
+              <ChevronLeft size={20} className="mr-1" /> Back
             </button>
-            <button type="button" onClick={nextStep} className="btn-primary flex-1 py-3" id="step2-next">
-              Next: Photos <ChevronRight size={16} />
+            <button type="button" onClick={nextStep} className="btn-primary flex-1 py-4 text-lg font-bold rounded-2xl shadow-md" id="step2-next">
+              Next: Photos <ChevronRight size={20} className="ml-1" />
             </button>
           </div>
         </div>
@@ -345,10 +355,10 @@ const ReportItemPage: React.FC = () => {
 
       {/* ─── Step 2: Photos ─────────────────────────────────────────────────── */}
       {step === 2 && (
-        <div style={cardStyle} className="animate-fadeIn space-y-6">
+        <div style={cardStyle} className="animate-fadeIn space-y-8">
           <div className="flex items-center justify-between">
-            <SectionHeader icon={<ImagePlus size={15} />} label="Photos" />
-            <span style={{ fontSize: '0.78rem', color: '#374151' }}>{images.length}/5</span>
+            <SectionHeader icon={<ImagePlus size={16} />} label="Photos" />
+            <span className="font-bold px-3 py-1 rounded-full" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', background: 'var(--bg-color)', border: '1px solid var(--divider)' }}>{images.length}/5 photos</span>
           </div>
 
           {/* Upload zone */}
@@ -358,28 +368,28 @@ const ReportItemPage: React.FC = () => {
             onDrop={handleDrop}
             id="image-dropzone"
             style={{
-              border: `2px dashed ${images.length >= 5 ? 'rgba(255,255,255,0.05)' : 'rgba(0,212,184,0.2)'}`,
-              borderRadius: 16,
-              padding: '2.5rem 1rem',
+              border: `2px dashed ${images.length >= 5 ? 'var(--divider)' : 'var(--accent-primary)'}`,
+              borderRadius: 20,
+              padding: '3rem 1.5rem',
               textAlign: 'center',
               cursor: images.length >= 5 ? 'not-allowed' : 'pointer',
-              opacity: images.length >= 5 ? 0.4 : 1,
-              background: 'rgba(0,212,184,0.02)',
+              opacity: images.length >= 5 ? 0.5 : 1,
+              background: 'var(--accent-light)',
               transition: 'all 0.2s ease',
             }}
             onMouseEnter={(e) => {
               if (images.length < 5)
-                (e.currentTarget as HTMLElement).style.background = 'rgba(0,212,184,0.05)';
+                (e.currentTarget as HTMLElement).style.background = 'var(--divider)';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = 'rgba(0,212,184,0.02)';
+              (e.currentTarget as HTMLElement).style.background = 'var(--accent-light)';
             }}
           >
-            <Upload size={30} style={{ margin: '0 auto 12px', color: '#00d4b8', opacity: 0.6 }} />
-            <p style={{ fontSize: '0.9rem', color: '#94a3b8', fontWeight: 500 }}>
+            <Upload size={36} style={{ margin: '0 auto 16px', color: 'var(--accent-primary)', opacity: 0.8 }} />
+            <p style={{ fontSize: '1.05rem', color: 'var(--text-primary)', fontWeight: 700 }}>
               {images.length >= 5 ? 'Maximum images reached' : 'Drop images here or click to browse'}
             </p>
-            <p style={{ fontSize: '0.75rem', color: '#374151', marginTop: '4px' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '8px', fontWeight: 500 }}>
               JPEG, PNG, WebP — max 5MB each
             </p>
           </div>
@@ -395,27 +405,27 @@ const ReportItemPage: React.FC = () => {
           />
 
           {previews.length > 0 && (
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
               {previews.map((src, i) => (
                 <div
                   key={i}
-                  className="relative aspect-square overflow-hidden group"
-                  style={{ borderRadius: 14, border: '1px solid rgba(255,255,255,0.07)' }}
+                  className="relative aspect-square overflow-hidden group shadow-sm"
+                  style={{ borderRadius: 16, border: '1px solid var(--divider)' }}
                 >
                   <img src={src} alt={`preview-${i}`} className="w-full h-full object-cover" />
                   <button
                     type="button"
                     onClick={() => removeImage(i)}
-                    className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ background: 'rgba(6,8,12,0.8)', color: '#fff' }}
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow-md"
+                    style={{ background: 'rgba(255,255,255,0.9)', color: '#ef4444' }}
                     id={`remove-img-${i}`}
                   >
-                    <X size={12} />
+                    <X size={16} />
                   </button>
                   {i === 0 && (
                     <div
-                      className="absolute bottom-2 left-2 text-xs px-2 py-0.5 rounded-full"
-                      style={{ background: 'rgba(0,212,184,0.85)', color: '#06080c', fontWeight: 700 }}
+                      className="absolute bottom-2 left-2 text-[0.7rem] px-2.5 py-0.5 rounded-full"
+                      style={{ background: 'var(--accent-primary)', color: '#ffffff', fontWeight: 800 }}
                     >
                       Cover
                     </div>
@@ -428,44 +438,44 @@ const ReportItemPage: React.FC = () => {
           {/* Summary card */}
           <div
             style={{
-              background: 'rgba(0,212,184,0.04)',
-              border: '1px solid rgba(0,212,184,0.1)',
-              borderRadius: 14,
-              padding: '1rem',
+              background: 'var(--bg-color)',
+              border: '1px solid var(--divider)',
+              borderRadius: 20,
+              padding: '1.5rem',
             }}
           >
-            <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#374151', marginBottom: '0.75rem' }}>
+            <p style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
               Report Summary
             </p>
             {[
-              { label: 'Type', value: status, style: { color: status === 'Lost' ? '#fca5a5' : '#5ff0de' } },
+              { label: 'Type', value: status, style: { color: status === 'Lost' ? '#ef4444' : 'var(--accent-primary)' } },
               { label: 'Title', value: title },
               { label: 'Category', value: category },
               { label: 'Location', value: locationName },
               { label: 'Photos', value: `${images.length} attached` },
             ].map(({ label, value, style }) => (
-              <div key={label} className="flex justify-between text-sm mb-1.5">
-                <span style={{ color: '#4b5563' }}>{label}</span>
-                <span className="font-medium text-white truncate max-w-[200px]" style={style}>{value}</span>
+              <div key={label} className="flex justify-between text-sm mb-2.5">
+                <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{label}</span>
+                <span className="font-bold text-[var(--text-primary)] truncate max-w-[200px]" style={style}>{value}</span>
               </div>
             ))}
           </div>
 
-          <div className="flex gap-3">
-            <button type="button" onClick={prevStep} className="btn-secondary flex-1 py-3" id="step3-back">
-              <ChevronLeft size={16} /> Back
+          <div className="flex gap-4 pt-2">
+            <button type="button" onClick={prevStep} className="px-6 py-4 rounded-2xl font-bold border flex items-center justify-center transition-all hover:bg-black/5 dark:hover:bg-white/5" style={{ color: 'var(--text-secondary)', borderColor: 'var(--divider)' }} id="step3-back">
+              <ChevronLeft size={20} className="mr-1" /> Back
             </button>
             <button
               type="button"
               onClick={handleSubmit}
               disabled={submitting}
-              className="btn-primary flex-1 py-3"
+              className="btn-primary flex-1 py-4 text-lg font-bold rounded-2xl shadow-md"
               id="submit-report"
             >
               {submitting ? (
-                <><Loader2 size={16} className="animate-spin" /> Submitting...</>
+                <><Loader2 size={20} className="animate-spin mr-2" /> Submitting...</>
               ) : (
-                <><FileText size={16} /> Submit Report</>
+                <><FileText size={20} className="mr-2" /> Submit Report</>
               )}
             </button>
           </div>

@@ -57,57 +57,52 @@ const HomePage: React.FC = () => {
   const hasActiveFilters = !!(filters.q || filters.category || filters.status);
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 transition-colors duration-300">
       {/* ─── Hero ──────────────────────────────────────────────────────────── */}
-      <div className="relative py-20 px-4 text-center overflow-hidden">
-        {/* Teal ambient */}
+      <div className="relative pt-24 pb-20 px-6 text-center overflow-hidden">
+        {/* Ambient background glow */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(ellipse 60% 60% at 50% 0%, rgba(0,212,184,0.07) 0%, transparent 70%)',
+            background: 'var(--mesh-bg)',
+            opacity: 1,
             pointerEvents: 'none',
           }}
         />
 
         <div className="relative page-container">
           {/* Tag pill */}
-          <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full"
-            style={{
-              background: 'rgba(0,212,184,0.07)',
-              border: '1px solid rgba(0,212,184,0.15)',
-            }}
-          >
-            <Sparkles size={12} style={{ color: '#00d4b8' }} />
-            <span style={{ fontSize: '0.78rem', color: '#5ff0de', fontWeight: 600 }}>
+          <div className="inline-flex items-center gap-2 mb-8 px-5 py-2 rounded-full shadow-sm glass-card hover-lift">
+            <Sparkles size={14} style={{ color: 'var(--accent-primary)' }} />
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 700 }}>
               Campus Lost &amp; Found Network
             </span>
           </div>
 
           <h1
-            className="font-bold text-white mb-5"
+            className="font-black mb-6 tracking-tight text-[var(--text-primary)]"
             style={{
-              fontFamily: 'Space Grotesk, sans-serif',
-              fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
-              lineHeight: 1.1,
-              letterSpacing: '-0.03em',
+              fontFamily: 'var(--font-family-display)',
+              fontSize: 'clamp(3rem, 7vw, 5rem)',
+              lineHeight: 1.05,
             }}
           >
             Lost something?<br />
-            <span className="gradient-text">We&apos;ll help you find it.</span>
+            <span className="gradient-text">We'll help you find it.</span>
           </h1>
 
-          <p className="mb-10 max-w-lg mx-auto" style={{ color: '#64748b', fontSize: '1.05rem' }}>
-            Report lost items, browse found objects, and connect with your campus community — all in one place.
+          <p className="mb-12 max-w-xl mx-auto font-medium" style={{ color: 'var(--text-secondary)', fontSize: '1.15rem', lineHeight: 1.6 }}>
+            Report lost items, browse found objects, and connect with your campus community — all in one modern platform.
           </p>
 
           {/* Search Bar */}
-          <form onSubmit={handleSearch} className="flex gap-2 max-w-xl mx-auto" id="search-form">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto" id="search-form">
             <div className="relative flex-1">
-              <Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: '#4b5563' }} />
+              <Search size={20} className="absolute left-5 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-secondary)' }} />
               <input
                 type="text"
-                className="input-field pl-12 h-12"
+                className="input-field pl-14 h-14 shadow-md font-medium text-lg hover-lift"
                 style={{ borderRadius: '999px' }}
                 placeholder="Search items, descriptions..."
                 value={searchInput}
@@ -115,8 +110,8 @@ const HomePage: React.FC = () => {
                 id="search-input"
               />
             </div>
-            <button type="submit" className="btn-primary px-6 h-12" id="search-btn">
-              <Search size={15} />
+            <button type="submit" className="btn-primary px-8 h-14 text-base font-bold shadow-md hover-lift" id="search-btn">
+              <Search size={18} />
               Search
             </button>
           </form>
@@ -124,121 +119,105 @@ const HomePage: React.FC = () => {
       </div>
 
       {/* ─── Content ───────────────────────────────────────────────────────── */}
-      <div className="page-container pb-16">
+      <div className="page-container pb-24">
 
         {/* Filter Pills Row */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
-          <div className="flex items-center gap-2 flex-wrap">
-            {/* Status pills */}
-            {STATUSES.map((s) => {
-              const isActive = filters.status === s;
-              const color =
-                s === 'Lost' ? 'rgba(239,68,68,0.12)' :
-                s === 'Found' ? 'rgba(0,212,184,0.12)' :
-                'rgba(184,169,255,0.12)';
-              const activeColor =
-                s === 'Lost' ? '#fca5a5' :
-                s === 'Found' ? '#5ff0de' :
-                '#c4b5fd';
-              const activeBorder =
-                s === 'Lost' ? 'rgba(239,68,68,0.35)' :
-                s === 'Found' ? 'rgba(0,212,184,0.35)' :
-                'rgba(184,169,255,0.3)';
-
-              return (
-                <button
-                  key={s}
-                  onClick={() => setFilters((f) => ({ ...f, status: f.status === s ? '' : s, page: 1 }))}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all"
-                  style={isActive
-                    ? { background: color, borderColor: activeBorder, color: activeColor }
-                    : { background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.07)', color: '#64748b' }
-                  }
-                  id={`filter-status-${s}`}
-                >
-                  {s}
-                </button>
-              );
-            })}
-
-            <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.08)' }} />
-
-            {/* Category pills */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {CATEGORIES.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setFilters((f) => ({ ...f, category: f.category === c ? '' : c, page: 1 }))}
-                  className={`tag-pill ${filters.category === c ? 'active' : 'inactive'}`}
-                  id={`filter-cat-${c}`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-
-            {hasActiveFilters && (
+        <div className="flex items-center gap-3 mb-10 overflow-x-auto pb-2 scrollbar-hide w-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {/* Status pills */}
+          {STATUSES.map((s) => {
+            const isActive = filters.status === s;
+            return (
               <button
-                onClick={clearFilters}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all"
-                style={{
-                  background: 'rgba(239,68,68,0.08)',
-                  border: '1px solid rgba(239,68,68,0.18)',
-                  color: '#fca5a5',
-                }}
-                id="clear-filters"
+                key={s}
+                onClick={() => setFilters((f) => ({ ...f, status: f.status === s ? '' : s, page: 1 }))}
+                className={`flex-shrink-0 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                  isActive 
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' 
+                    : 'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700'
+                }`}
+                id={`filter-status-${s}`}
               >
-                <X size={11} /> Clear
+                {s}
               </button>
-            )}
-          </div>
+            );
+          })}
 
-          <span style={{ fontSize: '0.8rem', color: '#4b5563' }}>
-            {loading ? '...' : `${total} items`}
+          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 flex-shrink-0 mx-1" />
+
+          {/* Category pills */}
+          {CATEGORIES.map((c) => {
+            const isActive = filters.category === c;
+            return (
+              <button
+                key={c}
+                onClick={() => setFilters((f) => ({ ...f, category: f.category === c ? '' : c, page: 1 }))}
+                className={`flex-shrink-0 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                  isActive 
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' 
+                    : 'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700'
+                }`}
+                id={`filter-cat-${c}`}
+              >
+                {c}
+              </button>
+            );
+          })}
+
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="flex-shrink-0 flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors text-red-600 bg-red-50 hover:bg-red-100 dark:text-red-400 dark:bg-red-900/20 dark:hover:bg-red-900/40 ml-2"
+              id="clear-filters"
+            >
+              <X size={14} /> Clear All
+            </button>
+          )}
+
+          <span className="flex-shrink-0 ml-auto font-semibold px-2 text-sm text-slate-500 dark:text-slate-400">
+            {loading ? 'Searching...' : `${total} items`}
           </span>
         </div>
 
         {/* Grid */}
         {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="item-card animate-pulse">
-                <div className="aspect-[4/3]" style={{ background: 'rgba(255,255,255,0.03)' }} />
-                <div className="p-4 space-y-2">
-                  <div className="h-3 rounded-full w-3/4" style={{ background: 'rgba(255,255,255,0.04)' }} />
-                  <div className="h-2 rounded-full w-1/2" style={{ background: 'rgba(255,255,255,0.03)' }} />
+              <div key={i} className="rounded-3xl border border-transparent overflow-hidden animate-pulse" style={{ background: 'var(--card-bg)' }}>
+                <div className="aspect-[4/3]" style={{ background: 'var(--divider)' }} />
+                <div className="p-5 space-y-3">
+                  <div className="h-4 rounded-full w-3/4" style={{ background: 'var(--divider)' }} />
+                  <div className="h-3 rounded-full w-1/2" style={{ background: 'var(--divider)' }} />
                 </div>
               </div>
             ))}
           </div>
         ) : items.length === 0 ? (
-          <div className="text-center py-24">
+          <div className="text-center py-32 rounded-3xl" style={{ background: 'var(--card-bg)', border: '1px dashed var(--divider)' }}>
             <div
-              className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
+              className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
               style={{
-                background: 'rgba(0,212,184,0.06)',
-                border: '1px solid rgba(0,212,184,0.12)',
+                background: 'var(--accent-light)',
               }}
             >
-              <Search size={28} style={{ color: '#00d4b8', opacity: 0.5 }} />
+              <Search size={32} style={{ color: 'var(--accent-primary)' }} />
             </div>
             <h3
-              className="text-xl font-bold text-white mb-2"
-              style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+              className="text-3xl font-bold mb-3"
+              style={{ fontFamily: 'var(--font-family-display)', color: 'var(--text-primary)' }}
             >
               No items found
             </h3>
-            <p style={{ color: '#4b5563', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-              {hasActiveFilters ? 'Try adjusting your filters.' : 'Be the first to report a lost or found item!'}
+            <p className="font-medium" style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '2rem' }}>
+              {hasActiveFilters ? "We couldn't find anything matching your filters." : 'Be the first to report a lost or found item on campus!'}
             </p>
             {!hasActiveFilters && (
-              <button onClick={() => navigate('/report')} className="btn-primary px-6">
-                Report an Item <ArrowRight size={15} />
+              <button onClick={() => navigate('/report')} className="btn-primary px-8 h-12 text-base shadow-md mx-auto flex items-center">
+                Report an Item <ArrowRight size={18} className="ml-2" />
               </button>
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {items.map((item) => (
               <ItemCard
                 key={item._id}
@@ -251,23 +230,23 @@ const HomePage: React.FC = () => {
 
         {/* Pagination */}
         {pages > 1 && (
-          <div className="flex justify-center gap-2 mt-12">
+          <div className="flex justify-center gap-3 mt-16">
             {Array.from({ length: pages }).map((_, i) => (
               <button
                 key={i}
                 onClick={() => setFilters((f) => ({ ...f, page: i + 1 }))}
-                className="w-9 h-9 rounded-full text-sm font-semibold transition-all"
+                className="w-12 h-12 rounded-full text-base font-black transition-all hover:scale-105"
                 style={
                   filters.page === i + 1
                     ? {
-                        background: 'linear-gradient(135deg, #00bfa5 0%, #5ff0de 100%)',
-                        color: '#06080c',
-                        boxShadow: '0 4px 16px rgba(0,212,184,0.35)',
+                        background: 'var(--accent-gradient)',
+                        color: '#ffffff',
+                        boxShadow: '0 8px 24px var(--accent-light)',
                       }
                     : {
-                        background: 'rgba(255,255,255,0.04)',
-                        color: '#64748b',
-                        border: '1px solid rgba(255,255,255,0.07)',
+                        background: 'var(--card-bg)',
+                        color: 'var(--text-secondary)',
+                        border: '1px solid var(--divider)',
                       }
                 }
                 id={`page-${i + 1}`}
