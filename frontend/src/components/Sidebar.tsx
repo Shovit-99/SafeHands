@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard, Search, PlusCircle, MessageCircle, Bell,
+  LayoutDashboard, Search, PlusCircle, MessageCircle,
   BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Package
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { User, Lock, Save, Loader2, ShieldCheck, ShieldAlert, QrCode } from 'lucide-react';
+import { User, Lock, Save, Loader2, ShieldCheck, ShieldAlert } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { updateProfile, updatePassword } from '../api/settings';
-import { generate2FA, verify2FA } from '../api/auth';
+
 
 const SettingsPage: React.FC = () => {
   const { user, updateUser } = useAuth();
