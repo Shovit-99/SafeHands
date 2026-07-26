@@ -24,16 +24,21 @@ export const validateEmailDomain = (
     return next();
   }
 
-  // Build a strict RegExp: must end with @<domain>
-  const domainRegex = new RegExp(
-    `^[a-zA-Z0-9._%+\\-]+@${allowedDomain.replace('.', '\\.')}$`,
-    'i'
-  );
+  // Build a strict RegExp
+  // If the domain is dit.edu.in, we enforce exactly 10 digits for the ERP ID
+  let domainRegex: RegExp;
+  if (allowedDomain === 'dit.edu.in') {
+    domainRegex = new RegExp(`^\\d{10}@${allowedDomain.replace('.', '\\.')}$`, 'i');
+  } else {
+    domainRegex = new RegExp(`^[a-zA-Z0-9._%+\\-]+@${allowedDomain.replace('.', '\\.')}$`, 'i');
+  }
 
   if (!domainRegex.test(email)) {
     res.status(400).json({
       success: false,
-      message: `Registration is restricted to ${allowedDomain} email addresses only.`,
+      message: allowedDomain === 'dit.edu.in' 
+        ? `Registration is restricted to 10-digit ERP IDs (e.g., 1000021893@dit.edu.in).`
+        : `Registration is restricted to ${allowedDomain} email addresses only.`,
     });
     return;
   }

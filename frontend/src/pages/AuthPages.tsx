@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Loader2, Package, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { login2FA } from '../api/auth';
 import toast from 'react-hot-toast';
 
 // ─── Shared Auth Layout ───────────────────────────────────────────────────────
@@ -101,18 +102,54 @@ export const LoginPage: React.FC = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  
+  // 2FA state
+  const [requires2FA, setRequires2FA] = useState(false);
+  const [tempToken, setTempToken] = useState('');
+  const [twoFaToken, setTwoFaToken] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await login(form.email, form.password);
+      const data = await login(form.email, form.password);
+      if (data && data.requires2FA) {
+        setRequires2FA(true);
+        setTempToken(data.tempToken);
+        toast.success('Please enter your 2FA code.');
+      } else {
+        toast.success('Welcome back!');
+        navigate(from, { replace: true });
+      }
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || 'Login failed.';
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handle2FASubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (twoFaToken.length !== 6) return toast.error('Code must be 6 digits.');
+    setLoading(true);
+    try {
+      const data = await login2FA(tempToken, twoFaToken);
+      // Persist user context manually since login2FA is separate API call
+      // using the updated AuthContext persist method
+      // @ts-ignore - Assuming we added persist2FA to useAuth
+      const { persist2FA } = useAuth();
+      if (persist2FA) {
+        persist2FA(data.token, data.user);
+      }
       toast.success('Welcome back!');
       navigate(from, { replace: true });
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message || 'Login failed.';
+          ?.message || 'Invalid 2FA code.';
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -128,66 +165,108 @@ export const LoginPage: React.FC = () => {
           className="glass-card p-8"
           style={{ border: '1px solid rgba(124,58,237,0.1)' }}
         >
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <InputGroup label="Email Address" icon={<Mail size={15} />}>
-              <input
-                type="email"
-                className="input-field pl-10"
-                placeholder="you@college.edu"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-                autoComplete="email"
-                id="login-email"
-              />
-            </InputGroup>
-
-            <InputGroup label="Password" icon={<Lock size={15} />}>
-              <input
-                type={showPass ? 'text' : 'password'}
-                className="input-field pl-10 pr-10"
-                placeholder="••••••••"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                required
-                autoComplete="current-password"
-                id="login-password"
-              />
+          {requires2FA ? (
+            <form onSubmit={handle2FASubmit} className="space-y-5 animate-fadeInUp">
+              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+                Your account is protected by two-factor authentication. Please enter the 6-digit code from your authenticator app.
+              </p>
+              <InputGroup label="Authentication Code" icon={<Lock size={15} />}>
+                <input
+                  type="text"
+                  className="input-field pl-10"
+                  placeholder="000000"
+                  value={twoFaToken}
+                  onChange={(e) => setTwoFaToken(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  required
+                  maxLength={6}
+                  style={{ fontSize: '1.25rem', letterSpacing: '0.25em', textAlign: 'center', fontWeight: 700 }}
+                  autoFocus
+                />
+              </InputGroup>
+              <button
+                type="submit"
+                disabled={loading || twoFaToken.length !== 6}
+                className="btn-primary w-full py-3 mt-2"
+              >
+                {loading ? (
+                  <><Loader2 size={16} className="animate-spin" /> Verifying...</>
+                ) : (
+                  <><span>Verify & Sign In</span><ArrowRight size={15} /></>
+                )}
+              </button>
               <button
                 type="button"
-                onClick={() => setShowPass(!showPass)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
-                style={{ color: '#4b5563' }}
-                id="toggle-password"
+                onClick={() => setRequires2FA(false)}
+                className="btn-ghost w-full py-2 mt-2"
+                disabled={loading}
               >
-                {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                Back to Login
               </button>
-            </InputGroup>
+            </form>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <InputGroup label="Email Address" icon={<Mail size={15} />}>
+                <input
+                  type="email"
+                  className="input-field pl-10"
+                  placeholder="you@college.edu"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  required
+                  autoComplete="email"
+                  id="login-email"
+                />
+              </InputGroup>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full py-3 mt-2"
-              id="login-submit"
-            >
-              {loading ? (
-                <><Loader2 size={16} className="animate-spin" /> Signing in...</>
-              ) : (
-                <><span>Sign In</span><ArrowRight size={15} /></>
-              )}
-            </button>
-          </form>
+              <InputGroup label="Password" icon={<Lock size={15} />}>
+                <input
+                  type={showPass ? 'text' : 'password'}
+                  className="input-field pl-10 pr-10"
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  required
+                  autoComplete="current-password"
+                  id="login-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPass(!showPass)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
+                  style={{ color: '#4b5563' }}
+                  id="toggle-password"
+                >
+                  {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </InputGroup>
 
-          <p className="text-center text-sm mt-6" style={{ color: '#475569' }}>
-            Don&apos;t have an account?{' '}
-            <Link
-              to="/register"
-              className="font-semibold transition-colors"
-              style={{ color: '#7C3AED' }}
-            >
-              Create one
-            </Link>
-          </p>
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-primary w-full py-3 mt-2"
+                id="login-submit"
+              >
+                {loading ? (
+                  <><Loader2 size={16} className="animate-spin" /> Signing in...</>
+                ) : (
+                  <><span>Sign In</span><ArrowRight size={15} /></>
+                )}
+              </button>
+            </form>
+          )}
+
+          {!requires2FA && (
+            <p className="text-center text-sm mt-6" style={{ color: '#475569' }}>
+              Don&apos;t have an account?{' '}
+              <Link
+                to="/register"
+                className="font-semibold transition-colors"
+                style={{ color: '#7C3AED' }}
+              >
+                Create one
+              </Link>
+            </p>
+          )}
         </div>
       </div>
     </AuthLayout>

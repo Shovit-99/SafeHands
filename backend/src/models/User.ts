@@ -30,6 +30,14 @@ const UserSchema = new Schema<IUser>(
       enum: ['student', 'admin'],
       default: 'student',
     },
+    twoFactorSecret: {
+      type: String,
+      select: false,
+    },
+    isTwoFactorEnabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

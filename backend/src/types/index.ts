@@ -9,6 +9,8 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: UserRole;
+  twoFactorSecret?: string;
+  isTwoFactorEnabled: boolean;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
