@@ -498,17 +498,19 @@ export const RegisterPage: React.FC = () => {
           )}
 
           {!requires2FASetup && (
-            <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
-              Already have an account?{' '}
-              <Link
-                to="/login"
-                className="font-semibold transition-colors hover-lift"
-                style={{ color: '#a78bfa', marginLeft: '0.25rem' }}
-              >
-                Sign in
-              </Link>
-            </p>
-          </div>
+            <div style={{ marginTop: '2rem', textAlign: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
+              <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
+                Already have an account?{' '}
+                <Link
+                  to="/login"
+                  className="font-semibold transition-colors hover-lift"
+                  style={{ color: '#a78bfa', marginLeft: '0.25rem' }}
+                >
+                  Sign in
+                </Link>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </AuthLayout>
