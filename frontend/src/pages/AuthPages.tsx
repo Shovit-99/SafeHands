@@ -76,15 +76,15 @@ interface InputGroupProps {
 }
 
 const InputGroup: React.FC<InputGroupProps> = ({ label, icon, children }) => (
-  <div>
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
     <label
-      className="block text-sm font-medium mb-2"
-      style={{ color: '#94a3b8' }}
+      className="block font-medium"
+      style={{ color: '#cbd5e1', fontSize: '0.9rem', paddingLeft: '0.25rem' }}
     >
       {label}
     </label>
     <div className="relative">
-      <div className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: '#4b5563' }}>
+      <div className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: '#94a3b8' }}>
         {icon}
       </div>
       {children}
@@ -158,22 +158,22 @@ export const LoginPage: React.FC = () => {
 
   return (
     <AuthLayout>
-      <div className="w-full max-w-md">
+      <div style={{ width: '100%', maxWidth: '440px', margin: '0 auto' }}>
         <AuthLogo title="Welcome back" subtitle="Sign in to your campus account" />
 
         <div
-          className="glass-card p-8"
-          style={{ border: '1px solid rgba(124,58,237,0.1)' }}
+          className="glass-card"
+          style={{ border: '1px solid rgba(124,58,237,0.1)', padding: '2.5rem 2rem' }}
         >
           {requires2FA ? (
-            <form onSubmit={handle2FASubmit} className="space-y-5 animate-fadeInUp">
-              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+            <form onSubmit={handle2FASubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }} className="animate-fadeInUp">
+              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '0.5rem', fontSize: '0.95rem' }}>
                 Your account is protected by two-factor authentication. Please enter the 6-digit code from your authenticator app.
               </p>
-              <InputGroup label="Authentication Code" icon={<Lock size={15} />}>
+              <InputGroup label="Authentication Code" icon={<Lock size={18} />}>
                 <input
                   type="text"
-                  className="input-field pl-10"
+                  className="input-field input-with-icon-left"
                   placeholder="000000"
                   value={twoFaToken}
                   onChange={(e) => setTwoFaToken(e.target.value.replace(/\D/g, '').slice(0, 6))}
@@ -186,7 +186,8 @@ export const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading || twoFaToken.length !== 6}
-                className="btn-primary w-full py-3 mt-2"
+                className="btn-primary w-full"
+                style={{ padding: '1rem', marginTop: '0.5rem', fontSize: '1rem' }}
               >
                 {loading ? (
                   <><Loader2 size={16} className="animate-spin" /> Verifying...</>
@@ -204,11 +205,11 @@ export const LoginPage: React.FC = () => {
               </button>
             </form>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <InputGroup label="Email Address" icon={<Mail size={15} />}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <InputGroup label="Email Address" icon={<Mail size={18} />}>
                 <input
                   type="email"
-                  className="input-field pl-10"
+                  className="input-field input-with-icon-left"
                   placeholder="you@college.edu"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -218,10 +219,10 @@ export const LoginPage: React.FC = () => {
                 />
               </InputGroup>
 
-              <InputGroup label="Password" icon={<Lock size={15} />}>
+              <InputGroup label="Password" icon={<Lock size={18} />}>
                 <input
                   type={showPass ? 'text' : 'password'}
-                  className="input-field pl-10 pr-10"
+                  className="input-field input-with-icon-left input-with-icon-right"
                   placeholder="••••••••"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -232,19 +233,20 @@ export const LoginPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
-                  style={{ color: '#4b5563' }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
+                  style={{ color: '#94a3b8' }}
                   id="toggle-password"
                 >
-                  {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                  {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </InputGroup>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary w-full py-3 mt-2"
+                className="btn-primary w-full"
                 id="login-submit"
+                style={{ padding: '1rem', marginTop: '0.5rem', fontSize: '1rem' }}
               >
                 {loading ? (
                   <><Loader2 size={16} className="animate-spin" /> Signing in...</>
@@ -256,16 +258,18 @@ export const LoginPage: React.FC = () => {
           )}
 
           {!requires2FA && (
-            <p className="text-center text-sm mt-6" style={{ color: '#475569' }}>
-              Don&apos;t have an account?{' '}
-              <Link
-                to="/register"
-                className="font-semibold transition-colors"
-                style={{ color: '#7C3AED' }}
-              >
-                Create one
-              </Link>
-            </p>
+            <div style={{ marginTop: '2rem', textAlign: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
+              <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
+                Don&apos;t have an account?{' '}
+                <Link
+                  to="/register"
+                  className="font-semibold transition-colors hover-lift"
+                  style={{ color: '#a78bfa', marginLeft: '0.25rem' }}
+                >
+                  Create one
+                </Link>
+              </p>
+            </div>
           )}
         </div>
       </div>
@@ -312,18 +316,18 @@ export const RegisterPage: React.FC = () => {
 
   return (
     <AuthLayout>
-      <div className="w-full max-w-md">
+      <div style={{ width: '100%', maxWidth: '440px', margin: '0 auto' }}>
         <AuthLogo title="Create account" subtitle="Join your campus lost & found network" />
 
         <div
-          className="glass-card p-8"
-          style={{ border: '1px solid rgba(124,58,237,0.1)' }}
+          className="glass-card"
+          style={{ border: '1px solid rgba(124,58,237,0.1)', padding: '2.5rem 2rem' }}
         >
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <InputGroup label="Full Name" icon={<User size={15} />}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <InputGroup label="Full Name" icon={<User size={18} />}>
               <input
                 type="text"
-                className="input-field pl-10"
+                className="input-field input-with-icon-left"
                 placeholder="Your Name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -333,10 +337,10 @@ export const RegisterPage: React.FC = () => {
               />
             </InputGroup>
 
-            <InputGroup label="College Email" icon={<Mail size={15} />}>
+            <InputGroup label="College Email" icon={<Mail size={18} />}>
               <input
                 type="email"
-                className="input-field pl-10"
+                className="input-field input-with-icon-left"
                 placeholder="you@college.edu"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -345,10 +349,10 @@ export const RegisterPage: React.FC = () => {
               />
             </InputGroup>
 
-            <InputGroup label="Password" icon={<Lock size={15} />}>
+            <InputGroup label="Password" icon={<Lock size={18} />}>
               <input
                 type={showPass ? 'text' : 'password'}
-                className="input-field pl-10 pr-10"
+                className="input-field input-with-icon-left input-with-icon-right"
                 placeholder="Min 8 characters"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -359,17 +363,17 @@ export const RegisterPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowPass(!showPass)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
-                style={{ color: '#4b5563' }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
+                style={{ color: '#94a3b8' }}
               >
-                {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </InputGroup>
 
-            <InputGroup label="Confirm Password" icon={<Lock size={15} />}>
+            <InputGroup label="Confirm Password" icon={<Lock size={18} />}>
               <input
                 type={showPass ? 'text' : 'password'}
-                className="input-field pl-10"
+                className="input-field input-with-icon-left"
                 placeholder="Repeat password"
                 value={form.confirm}
                 onChange={(e) => setForm({ ...form, confirm: e.target.value })}
@@ -381,8 +385,9 @@ export const RegisterPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full py-3 mt-2"
+              className="btn-primary w-full"
               id="register-submit"
+              style={{ padding: '1rem', marginTop: '0.5rem', fontSize: '1rem' }}
             >
               {loading ? (
                 <><Loader2 size={16} className="animate-spin" /> Creating account...</>
@@ -392,16 +397,18 @@ export const RegisterPage: React.FC = () => {
             </button>
           </form>
 
-          <p className="text-center text-sm mt-6" style={{ color: '#475569' }}>
-            Already have an account?{' '}
-            <Link
-              to="/login"
-              className="font-semibold transition-colors"
-              style={{ color: '#7C3AED' }}
-            >
-              Sign in
-            </Link>
-          </p>
+          <div style={{ marginTop: '2rem', textAlign: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
+            <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
+              Already have an account?{' '}
+              <Link
+                to="/login"
+                className="font-semibold transition-colors hover-lift"
+                style={{ color: '#a78bfa', marginLeft: '0.25rem' }}
+              >
+                Sign in
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </AuthLayout>
