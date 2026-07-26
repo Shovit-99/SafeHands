@@ -33,7 +33,7 @@ app.use('/api/notifications', notificationRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {
-  res.status(200).json({ status: 'ok', service: 'LostHub API' });
+  res.status(200).json({ status: 'ok', service: 'SafeHands API' });
 });
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────
@@ -48,7 +48,7 @@ const PORT = parseInt(process.env.PORT || '5000', 10);
 const start = async () => {
   await connectDB();
   httpServer.listen(PORT, () => {
-    console.log(`🚀 LostHub API running on http://localhost:${PORT}`);
+    console.log(`🚀 SafeHands API running on http://localhost:${PORT}`);
     console.log(`📡 Socket.IO ready on port ${PORT}`);
   });
 };

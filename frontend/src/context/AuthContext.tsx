@@ -27,8 +27,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // ─── Hydrate from LocalStorage ───────────────────────────────────────────
   useEffect(() => {
-    const storedToken = localStorage.getItem('losthub_token');
-    const storedUser = localStorage.getItem('losthub_user');
+    const storedToken = localStorage.getItem('safehands_token');
+    const storedUser = localStorage.getItem('safehands_user');
 
     if (storedToken && storedUser) {
       setToken(storedToken);
@@ -40,8 +40,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // ─── Persist to LocalStorage ─────────────────────────────────────────────
   const persist = (token: string, user: User) => {
-    localStorage.setItem('losthub_token', token);
-    localStorage.setItem('losthub_user', JSON.stringify(user));
+    localStorage.setItem('safehands_token', token);
+    localStorage.setItem('safehands_user', JSON.stringify(user));
     setToken(token);
     setUser(user);
   };
@@ -83,8 +83,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
-    localStorage.removeItem('losthub_token');
-    localStorage.removeItem('losthub_user');
+    localStorage.removeItem('safehands_token');
+    localStorage.removeItem('safehands_user');
     setToken(null);
     setUser(null);
     disconnectSocket();

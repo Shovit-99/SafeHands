@@ -12,7 +12,7 @@ const api = axios.create({
 // ─── Request Interceptor: Attach Bearer Token ──────────────────────────────
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('losthub_token');
+    const token = localStorage.getItem('safehands_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -26,8 +26,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('losthub_token');
-      localStorage.removeItem('losthub_user');
+      localStorage.removeItem('safehands_token');
+      localStorage.removeItem('safehands_user');
       window.location.href = '/login';
     }
     return Promise.reject(error);

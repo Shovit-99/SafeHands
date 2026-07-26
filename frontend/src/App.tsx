@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './components/DashboardLayout';
 import { LoginPage, RegisterPage } from './pages/AuthPages';
 import HomePage from './pages/HomePage';
+import LandingPage from './pages/LandingPage';
 
 // Lazy load heavy pages
 const ItemDetailPage = React.lazy(() => import('./pages/ItemDetailPage'));
@@ -49,7 +50,8 @@ function App() {
         />
 
         <Routes>
-          {/* Public Auth Routes (no Dashboard shell) */}
+          {/* Public Routes (no Dashboard shell) */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
@@ -60,7 +62,7 @@ function App() {
               <DashboardLayout>
                 <React.Suspense fallback={<SuspenseFallback />}>
                   <Routes>
-                    <Route path="/" element={<HomePage />} />
+                    <Route path="/explore" element={<HomePage />} />
                     <Route path="/items/:id" element={<ItemDetailPage />} />
 
                     <Route
@@ -104,7 +106,7 @@ function App() {
                       }
                     />
 
-                    <Route path="*" element={<Navigate to="/" replace />} />
+                    <Route path="*" element={<Navigate to="/explore" replace />} />
                   </Routes>
                 </React.Suspense>
               </DashboardLayout>

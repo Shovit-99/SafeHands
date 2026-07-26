@@ -55,7 +55,7 @@ const AuthLogo: React.FC<{ title: string; subtitle: string }> = ({ title, subtit
         className="text-2xl font-bold gradient-text"
         style={{ fontFamily: 'Inter, sans-serif' }}
       >
-        LostHub
+        SafeHands
       </span>
     </div>
     <h1
@@ -342,7 +342,7 @@ export const RegisterPage: React.FC = () => {
         setSecret(data.secret);
         toast.success('Account created! Please setup 2FA.');
       } else {
-        toast.success('Account created! Welcome to LostHub.');
+        toast.success('Account created! Welcome to SafeHands.');
         navigate('/', { replace: true });
       }
     } catch (err: unknown) {
@@ -364,7 +364,7 @@ export const RegisterPage: React.FC = () => {
       if (persist2FA) {
         persist2FA(data.token, data.user);
       }
-      toast.success('2FA Setup Complete! Welcome to LostHub.');
+      toast.success('2FA Setup Complete! Welcome to SafeHands.');
       navigate('/', { replace: true });
     } catch (err: unknown) {
       const msg =

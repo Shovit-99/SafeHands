@@ -13,7 +13,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    const stored = localStorage.getItem('losthub_sidebar');
+    const stored = localStorage.getItem('safehands_sidebar');
     return stored ? stored === 'collapsed' : false;
   });
   const [isMobile, setIsMobile] = useState(false);
@@ -28,7 +28,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const toggleSidebar = () => {
     setSidebarCollapsed((prev) => {
       const next = !prev;
-      localStorage.setItem('losthub_sidebar', next ? 'collapsed' : 'expanded');
+      localStorage.setItem('safehands_sidebar', next ? 'collapsed' : 'expanded');
       return next;
     });
   };

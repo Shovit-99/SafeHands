@@ -19,7 +19,7 @@ if (cloudinaryConfigured) {
   storage = new CloudinaryStorage({
     cloudinary,
     params: async (_req: unknown, file: Express.Multer.File) => ({
-      folder: 'losthub/items',
+      folder: 'safehands/items',
       allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
       transformation: [{ width: 1200, height: 900, crop: 'limit', quality: 85 }],
       public_id: `${Date.now()}-${file.originalname.replace(/\s+/g, '_')}`,

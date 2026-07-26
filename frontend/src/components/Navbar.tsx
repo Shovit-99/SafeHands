@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
               className="text-xl font-black tracking-tight"
               style={{ fontFamily: 'var(--font-family-display)', color: 'var(--text-primary)' }}
             >
-              LostHub
+              SafeHands
             </span>
           </Link>
 

@@ -31,7 +31,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const user = await User.create({ name, email, password, role: safeRole });
 
     const secret = speakeasy.generateSecret({
-      name: `LostHub (${user.email})`,
+      name: `SafeHands (${user.email})`,
     });
     user.twoFactorSecret = secret.base32;
     await user.save();
@@ -112,7 +112,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     // If 2FA is NOT enabled, enforce setup
     const secret = speakeasy.generateSecret({
-      name: `LostHub (${user.email})`,
+      name: `SafeHands (${user.email})`,
     });
     user.twoFactorSecret = secret.base32;
     await user.save();
@@ -240,7 +240,7 @@ export const generate2FA = async (req: Request, res: Response): Promise<void> =>
     }
 
     const secret = speakeasy.generateSecret({
-      name: `LostHub (${user.email})`,
+      name: `SafeHands (${user.email})`,
     });
 
     user.twoFactorSecret = secret.base32;

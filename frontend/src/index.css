@@ -10,19 +10,24 @@
 
 :root {
   /* Core Palette */
-  --bg-primary: #070B17;
-  --bg-secondary: #111827;
-  --bg-card: #151B2F;
-  --bg-card-hover: #1a2240;
-  --bg-elevated: #1e2744;
+  --bg-primary: #f4f5f5; /* Light gray background */
+  --bg-secondary: #ffffff; /* White background */
+  --bg-dark: #111111; /* Dark background */
+  --bg-card: #ffffff;
+  --bg-card-dark: #1a1a1a;
+  --bg-elevated: #ffffff;
 
-  /* Accent: Purple → Pink */
-  --accent-purple: #7C3AED;
-  --accent-pink: #EC4899;
-  --accent-gradient: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
-  --accent-gradient-hover: linear-gradient(135deg, #8B5CF6 0%, #F472B6 100%);
-  --accent-light: rgba(124, 58, 237, 0.15);
-  --accent-glow: rgba(124, 58, 237, 0.3);
+  /* Accent: Lime Green */
+  --accent-lime: #ccff00;
+  --accent-lime-hover: #b3e600;
+  --accent-gradient: linear-gradient(135deg, #ccff00 0%, #aadd00 100%);
+  --accent-gradient-hover: linear-gradient(135deg, #b3e600 0%, #99cc00 100%);
+  --accent-light: rgba(204, 255, 0, 0.15);
+  --accent-glow: rgba(204, 255, 0, 0.3);
+  
+  /* Fallbacks for older components that might still use purple names */
+  --accent-purple: var(--accent-lime);
+  --accent-pink: #000000;
 
   /* Semantic Colors */
   --color-success: #22C55E;
@@ -31,29 +36,28 @@
   --color-info: #3B82F6;
 
   /* Text */
-  --text-primary: #FFFFFF;
-  --text-secondary: #94A3B8;
-  --text-tertiary: #64748B;
-  --text-muted: #475569;
+  --text-primary: #111111; /* Dark text for light bg */
+  --text-primary-dark: #ffffff; /* Light text for dark bg */
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-muted: #a3a3a3;
 
   /* Borders & Dividers */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.15);
-  --border-accent: rgba(124, 58, 237, 0.3);
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-default: rgba(0, 0, 0, 0.15);
+  --border-strong: rgba(0, 0, 0, 0.3);
+  --border-accent: rgba(204, 255, 0, 0.5);
+  
+  --border-subtle-dark: rgba(255, 255, 255, 0.08);
+  --border-default-dark: rgba(255, 255, 255, 0.15);
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 20px rgba(124, 58, 237, 0.15);
-  --shadow-glow-strong: 0 0 40px rgba(124, 58, 237, 0.25);
-
-  /* Glassmorphism */
-  --glass-bg: rgba(21, 27, 47, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-blur: 20px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.16);
+  --shadow-glow: 0 0 20px rgba(204, 255, 0, 0.3);
+  --shadow-glow-strong: 0 0 40px rgba(204, 255, 0, 0.5);
 
   /* Layout */
   --sidebar-collapsed: 72px;
@@ -62,26 +66,31 @@
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-xl: 18px;
+  --radius-xl: 20px;
   --radius-2xl: 24px;
   --radius-full: 999px;
 
   /* Status Colors */
-  --status-lost-bg: rgba(239, 68, 68, 0.15);
-  --status-lost-text: #FCA5A5;
-  --status-lost-border: rgba(239, 68, 68, 0.3);
-  --status-found-bg: rgba(34, 197, 94, 0.15);
-  --status-found-text: #86EFAC;
-  --status-found-border: rgba(34, 197, 94, 0.3);
-  --status-claimed-bg: rgba(59, 130, 246, 0.15);
-  --status-claimed-text: #93C5FD;
-  --status-claimed-border: rgba(59, 130, 246, 0.3);
+  --status-lost-bg: rgba(239, 68, 68, 0.1);
+  --status-lost-text: #DC2626;
+  --status-lost-border: rgba(239, 68, 68, 0.2);
+  --status-found-bg: rgba(34, 197, 94, 0.1);
+  --status-found-text: #16A34A;
+  --status-found-border: rgba(34, 197, 94, 0.2);
+  --status-claimed-bg: rgba(59, 130, 246, 0.1);
+  --status-claimed-text: #2563EB;
+  --status-claimed-border: rgba(59, 130, 246, 0.2);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-blur: 20px;
 
   /* Mesh Background */
   --mesh-bg:
-    radial-gradient(ellipse 80% 60% at 10% 0%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(124, 58, 237, 0.06) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 60% at 10% 0%, rgba(204, 255, 0, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(204, 255, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(0, 0, 0, 0.02) 0%, transparent 50%);
 }
 
 /* ─── Base Reset ────────────────────────────────────────────────────────────── */
@@ -207,7 +216,7 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   background: var(--accent-gradient);
-  color: #ffffff;
+  color: #000000;
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 0.875rem;
@@ -215,7 +224,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 4px 14px rgba(204, 255, 0, 0.3);
   white-space: nowrap;
   position: relative;
   overflow: hidden;
@@ -223,7 +232,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-primary:hover {
   transform: translateY(-1px) scale(1.02);
-  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 8px 24px rgba(204, 255, 0, 0.4);
   background: var(--accent-gradient-hover);
 }
 
@@ -351,8 +360,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .input-field:focus {
-  border-color: var(--accent-purple);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  border-color: var(--accent-lime);
+  box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.15);
 }
 
 .input-field::placeholder {
@@ -434,7 +443,7 @@ h1, h2, h3, h4, h5, h6 {
 .tag-pill:hover,
 .tag-pill.active {
   background: var(--accent-light);
-  color: var(--accent-purple);
+  color: var(--text-primary);
   border-color: var(--border-accent);
 }
 

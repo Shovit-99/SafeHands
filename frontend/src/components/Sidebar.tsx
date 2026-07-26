@@ -109,10 +109,10 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)',
+            boxShadow: '0 4px 14px rgba(204, 255, 0, 0.3)',
           }}
         >
-          <Package size={18} color="#fff" />
+          <Package size={18} color="#000" />
         </div>
         {!collapsed && (
           <span
@@ -123,7 +123,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
               color: 'var(--text-primary)',
             }}
           >
-            LostHub
+            SafeHands
           </span>
         )}
       </div>
