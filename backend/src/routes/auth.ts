@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, getMe, updateProfile, updatePassword, generate2FA, verify2FA, login2FA } from '../controllers/authController';
+import { register, login, getMe, updateProfile, updatePassword, generate2FA, verify2FA, login2FA, setup2FA } from '../controllers/authController';
 import { authenticate } from '../middleware/auth';
 import { validateEmailDomain } from '../middleware/validators';
 import { validateRegister, validateLogin } from '../middleware/requestValidators';
@@ -25,5 +25,6 @@ router.patch('/password', authenticate, updatePassword);
 router.post('/2fa/generate', authenticate, generate2FA);
 router.post('/2fa/verify', authenticate, verify2FA);
 router.post('/login/2fa', login2FA);
+router.post('/2fa/setup', setup2FA);
 
 export default router;

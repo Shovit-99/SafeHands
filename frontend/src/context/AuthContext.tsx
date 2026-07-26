@@ -10,7 +10,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<any>;
   persist2FA: (token: string, user: User) => void;
   updateUser: (user: User) => void;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<any>;
   logout: () => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (email: string, password: string) => {
     const { data } = await api.post('/auth/login', { email, password });
-    if (data.requires2FA) {
+    if (data.requires2FA || data.requires2FASetup) {
       return data;
     }
     persist(data.token, data.user);
@@ -75,7 +75,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       email,
       password,
     });
+    if (data.requires2FASetup) {
+      return data;
+    }
     persist(data.token, data.user);
+    return data;
   };
 
   const logout = () => {

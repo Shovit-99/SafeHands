@@ -30,24 +30,27 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     const user = await User.create({ name, email, password, role: safeRole });
 
-    const payload: JwtPayload = {
-      id: String(user._id),
-      email: user.email,
-      role: user.role,
-    };
+    const secret = speakeasy.generateSecret({
+      name: `LostHub (${user.email})`,
+    });
+    user.twoFactorSecret = secret.base32;
+    await user.save();
 
-    const token = signToken(payload);
+    const dataURL = await qrcode.toDataURL(secret.otpauth_url || '');
+
+    const tempToken = jwt.sign(
+      { id: String(user._id), email: user.email, isTemp: true },
+      process.env.JWT_SECRET as string,
+      { expiresIn: '15m' }
+    );
 
     res.status(201).json({
       success: true,
-      message: 'Account created successfully.',
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      message: 'Account created. Please setup 2FA.',
+      requires2FASetup: true,
+      tempToken,
+      qrCodeUrl: dataURL,
+      secret: secret.base32,
     });
   } catch (error) {
     const message =
@@ -91,7 +94,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       role: user.role,
     };
 
-    // If 2FA is enabled, do not return the full auth token yet
+    // If 2FA is enabled, require standard 2FA login
     if (user.isTwoFactorEnabled) {
       const tempToken = jwt.sign(
         { id: String(user._id), email: user.email, isTemp: true },
@@ -107,18 +110,28 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const token = signToken(payload);
+    // If 2FA is NOT enabled, enforce setup
+    const secret = speakeasy.generateSecret({
+      name: `LostHub (${user.email})`,
+    });
+    user.twoFactorSecret = secret.base32;
+    await user.save();
+
+    const dataURL = await qrcode.toDataURL(secret.otpauth_url || '');
+
+    const tempToken = jwt.sign(
+      { id: String(user._id), email: user.email, isTemp: true },
+      process.env.JWT_SECRET as string,
+      { expiresIn: '15m' }
+    );
 
     res.status(200).json({
       success: true,
-      message: 'Login successful.',
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      message: '2FA setup required.',
+      requires2FASetup: true,
+      tempToken,
+      qrCodeUrl: dataURL,
+      secret: secret.base32,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Login failed.';
@@ -333,5 +346,71 @@ export const login2FA = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to login with 2FA.' });
+  }
+};
+
+// ─── 2FA: Setup with Temp Token ──────────────────────────────────────────────
+export const setup2FA = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { tempToken, token } = req.body as { tempToken: string; token: string };
+    if (!tempToken || !token) {
+      res.status(400).json({ success: false, message: 'Temp token and 2FA code required.' });
+      return;
+    }
+
+    let decoded: any;
+    try {
+      decoded = jwt.verify(tempToken, process.env.JWT_SECRET as string);
+    } catch (err) {
+      res.status(401).json({ success: false, message: 'Invalid or expired temp token.' });
+      return;
+    }
+
+    if (!decoded.isTemp) {
+      res.status(401).json({ success: false, message: 'Invalid token type.' });
+      return;
+    }
+
+    const user = await User.findById(decoded.id).select('+twoFactorSecret');
+    if (!user || !user.twoFactorSecret) {
+      res.status(401).json({ success: false, message: 'User not found or secret not generated.' });
+      return;
+    }
+
+    const verified = speakeasy.totp.verify({
+      secret: user.twoFactorSecret,
+      encoding: 'base32',
+      token,
+    });
+
+    if (!verified) {
+      res.status(400).json({ success: false, message: 'Invalid 2FA code.' });
+      return;
+    }
+
+    user.isTwoFactorEnabled = true;
+    await user.save();
+
+    const payload: JwtPayload = {
+      id: String(user._id),
+      email: user.email,
+      role: user.role,
+    };
+
+    const finalToken = signToken(payload);
+
+    res.status(200).json({
+      success: true,
+      message: '2FA setup successful.',
+      token: finalToken,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to setup 2FA.' });
   }
 };

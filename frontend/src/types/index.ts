@@ -13,6 +13,11 @@ export interface AuthResponse {
   token: string;
   user: User;
   message?: string;
+  requires2FA?: boolean;
+  requires2FASetup?: boolean;
+  tempToken?: string;
+  qrCodeUrl?: string;
+  secret?: string;
 }
 
 // ─── Item Types ───────────────────────────────────────────────────────────────

@@ -43,6 +43,11 @@ export const verify2FA = async (token: string): Promise<void> => {
   await api.post('/auth/2fa/verify', { token });
 };
 
+export const setup2FA = async (tempToken: string, token: string): Promise<AuthResponse> => {
+  const { data } = await api.post<AuthResponse>('/auth/2fa/setup', { tempToken, token });
+  return data;
+};
+
 export const login2FA = async (tempToken: string, token: string): Promise<AuthResponse> => {
   const { data } = await api.post<AuthResponse>('/auth/login/2fa', { tempToken, token });
   return data;

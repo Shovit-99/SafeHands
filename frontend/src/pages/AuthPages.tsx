@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Loader2, Package, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { login2FA } from '../api/auth';
+import { login2FA, setup2FA } from '../api/auth';
 import toast from 'react-hot-toast';
 
 // ─── Shared Auth Layout ───────────────────────────────────────────────────────
@@ -105,6 +105,9 @@ export const LoginPage: React.FC = () => {
   
   // 2FA state
   const [requires2FA, setRequires2FA] = useState(false);
+  const [requires2FASetup, setRequires2FASetup] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [secret, setSecret] = useState('');
   const [tempToken, setTempToken] = useState('');
   const [twoFaToken, setTwoFaToken] = useState('');
 
@@ -117,6 +120,12 @@ export const LoginPage: React.FC = () => {
         setRequires2FA(true);
         setTempToken(data.tempToken);
         toast.success('Please enter your 2FA code.');
+      } else if (data && data.requires2FASetup) {
+        setRequires2FASetup(true);
+        setTempToken(data.tempToken);
+        setQrCodeUrl(data.qrCodeUrl);
+        setSecret(data.secret);
+        toast.success('Please setup 2FA to continue.');
       } else {
         toast.success('Welcome back!');
         navigate(from, { replace: true });
@@ -136,15 +145,18 @@ export const LoginPage: React.FC = () => {
     if (twoFaToken.length !== 6) return toast.error('Code must be 6 digits.');
     setLoading(true);
     try {
-      const data = await login2FA(tempToken, twoFaToken);
-      // Persist user context manually since login2FA is separate API call
-      // using the updated AuthContext persist method
-      // @ts-ignore - Assuming we added persist2FA to useAuth
+      let data;
+      if (requires2FASetup) {
+        data = await setup2FA(tempToken, twoFaToken);
+      } else {
+        data = await login2FA(tempToken, twoFaToken);
+      }
+      
       const { persist2FA } = useAuth();
       if (persist2FA) {
         persist2FA(data.token, data.user);
       }
-      toast.success('Welcome back!');
+      toast.success(requires2FASetup ? '2FA enabled! Welcome.' : 'Welcome back!');
       navigate(from, { replace: true });
     } catch (err: unknown) {
       const msg =
@@ -165,11 +177,24 @@ export const LoginPage: React.FC = () => {
           className="glass-card"
           style={{ border: '1px solid rgba(124,58,237,0.1)', padding: '2.5rem 2rem' }}
         >
-          {requires2FA ? (
+          {requires2FA || requires2FASetup ? (
             <form onSubmit={handle2FASubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }} className="animate-fadeInUp">
-              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '0.5rem', fontSize: '0.95rem' }}>
-                Your account is protected by two-factor authentication. Please enter the 6-digit code from your authenticator app.
-              </p>
+              {requires2FASetup && qrCodeUrl && (
+                <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                  <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem', fontSize: '0.95rem' }}>
+                    Setup 2FA by scanning this QR code in Google Authenticator or Authy.
+                  </p>
+                  <img src={qrCodeUrl} alt="2FA QR Code" style={{ borderRadius: '12px', margin: '0 auto 1rem', padding: '0.5rem', background: '#fff' }} />
+                  <p style={{ color: 'var(--text-tertiary)', fontSize: '0.8rem', fontFamily: 'monospace' }}>{secret}</p>
+                </div>
+              )}
+              
+              {!requires2FASetup && (
+                <p style={{ color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '0.5rem', fontSize: '0.95rem' }}>
+                  Your account is protected by two-factor authentication. Please enter the 6-digit code from your authenticator app.
+                </p>
+              )}
+              
               <InputGroup label="Authentication Code" icon={<Lock size={18} />}>
                 <input
                   type="text"
@@ -197,7 +222,10 @@ export const LoginPage: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={() => setRequires2FA(false)}
+                onClick={() => {
+                  setRequires2FA(false);
+                  setRequires2FASetup(false);
+                }}
                 className="btn-ghost w-full py-2 mt-2"
                 disabled={loading}
               >
@@ -257,7 +285,7 @@ export const LoginPage: React.FC = () => {
             </form>
           )}
 
-          {!requires2FA && (
+          {!requires2FA && !requires2FASetup && (
             <div style={{ marginTop: '2rem', textAlign: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
               <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
                 Don&apos;t have an account?{' '}
@@ -285,6 +313,13 @@ export const RegisterPage: React.FC = () => {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  
+  // 2FA state
+  const [requires2FASetup, setRequires2FASetup] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [secret, setSecret] = useState('');
+  const [tempToken, setTempToken] = useState('');
+  const [twoFaToken, setTwoFaToken] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -301,13 +336,43 @@ export const RegisterPage: React.FC = () => {
 
     setLoading(true);
     try {
-      await register(form.name, form.email, form.password);
-      toast.success('Account created! Welcome to LostHub.');
-      navigate('/', { replace: true });
+      const data = await register(form.name, form.email, form.password);
+      if (data && data.requires2FASetup) {
+        setRequires2FASetup(true);
+        setTempToken(data.tempToken);
+        setQrCodeUrl(data.qrCodeUrl);
+        setSecret(data.secret);
+        toast.success('Account created! Please setup 2FA.');
+      } else {
+        toast.success('Account created! Welcome to LostHub.');
+        navigate('/', { replace: true });
+      }
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message || 'Registration failed.';
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handle2FASubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (twoFaToken.length !== 6) return toast.error('Code must be 6 digits.');
+    setLoading(true);
+    try {
+      const data = await setup2FA(tempToken, twoFaToken);
+      const { persist2FA } = useAuth();
+      if (persist2FA) {
+        persist2FA(data.token, data.user);
+      }
+      toast.success('2FA Setup Complete! Welcome to LostHub.');
+      navigate('/', { replace: true });
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || 'Invalid 2FA code.';
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -323,81 +388,119 @@ export const RegisterPage: React.FC = () => {
           className="glass-card"
           style={{ border: '1px solid rgba(124,58,237,0.1)', padding: '2.5rem 2rem' }}
         >
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <InputGroup label="Full Name" icon={<User size={18} />}>
-              <input
-                type="text"
-                className="input-field input-with-icon-left"
-                placeholder="Your Name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                required
-                minLength={2}
-                id="register-name"
-              />
-            </InputGroup>
-
-            <InputGroup label="College Email" icon={<Mail size={18} />}>
-              <input
-                type="email"
-                className="input-field input-with-icon-left"
-                placeholder="you@college.edu"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-                id="register-email"
-              />
-            </InputGroup>
-
-            <InputGroup label="Password" icon={<Lock size={18} />}>
-              <input
-                type={showPass ? 'text' : 'password'}
-                className="input-field input-with-icon-left input-with-icon-right"
-                placeholder="Min 8 characters"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                required
-                minLength={8}
-                id="register-password"
-              />
+          {requires2FASetup ? (
+            <form onSubmit={handle2FASubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }} className="animate-fadeInUp">
+              <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem', fontSize: '0.95rem' }}>
+                  Secure your account by scanning this QR code in Google Authenticator or Authy.
+                </p>
+                <img src={qrCodeUrl} alt="2FA QR Code" style={{ borderRadius: '12px', margin: '0 auto 1rem', padding: '0.5rem', background: '#fff' }} />
+                <p style={{ color: 'var(--text-tertiary)', fontSize: '0.8rem', fontFamily: 'monospace' }}>{secret}</p>
+              </div>
+              
+              <InputGroup label="Authentication Code" icon={<Lock size={18} />}>
+                <input
+                  type="text"
+                  className="input-field input-with-icon-left"
+                  placeholder="000000"
+                  value={twoFaToken}
+                  onChange={(e) => setTwoFaToken(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  required
+                  maxLength={6}
+                  style={{ fontSize: '1.25rem', letterSpacing: '0.25em', textAlign: 'center', fontWeight: 700 }}
+                  autoFocus
+                />
+              </InputGroup>
               <button
-                type="button"
-                onClick={() => setShowPass(!showPass)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
-                style={{ color: '#94a3b8' }}
+                type="submit"
+                disabled={loading || twoFaToken.length !== 6}
+                className="btn-primary w-full"
+                style={{ padding: '1rem', marginTop: '0.5rem', fontSize: '1rem' }}
               >
-                {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
+                {loading ? (
+                  <><Loader2 size={16} className="animate-spin" /> Verifying...</>
+                ) : (
+                  <><span>Complete Setup</span><ArrowRight size={15} /></>
+                )}
               </button>
-            </InputGroup>
+            </form>
+          ) : (
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <InputGroup label="Full Name" icon={<User size={18} />}>
+                <input
+                  type="text"
+                  className="input-field input-with-icon-left"
+                  placeholder="Your Name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                  minLength={2}
+                  id="register-name"
+                />
+              </InputGroup>
 
-            <InputGroup label="Confirm Password" icon={<Lock size={18} />}>
-              <input
-                type={showPass ? 'text' : 'password'}
-                className="input-field input-with-icon-left"
-                placeholder="Repeat password"
-                value={form.confirm}
-                onChange={(e) => setForm({ ...form, confirm: e.target.value })}
-                required
-                id="register-confirm"
-              />
-            </InputGroup>
+              <InputGroup label="College Email" icon={<Mail size={18} />}>
+                <input
+                  type="email"
+                  className="input-field input-with-icon-left"
+                  placeholder="you@college.edu"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  required
+                  id="register-email"
+                />
+              </InputGroup>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full"
-              id="register-submit"
-              style={{ padding: '1rem', marginTop: '0.5rem', fontSize: '1rem' }}
-            >
-              {loading ? (
-                <><Loader2 size={16} className="animate-spin" /> Creating account...</>
-              ) : (
-                <><span>Create Account</span><ArrowRight size={15} /></>
-              )}
-            </button>
-          </form>
+              <InputGroup label="Password" icon={<Lock size={18} />}>
+                <input
+                  type={showPass ? 'text' : 'password'}
+                  className="input-field input-with-icon-left input-with-icon-right"
+                  placeholder="Min 8 characters"
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  required
+                  minLength={8}
+                  id="register-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPass(!showPass)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors"
+                  style={{ color: '#94a3b8' }}
+                >
+                  {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </InputGroup>
 
-          <div style={{ marginTop: '2rem', textAlign: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem' }}>
+              <InputGroup label="Confirm Password" icon={<Lock size={18} />}>
+                <input
+                  type={showPass ? 'text' : 'password'}
+                  className="input-field input-with-icon-left"
+                  placeholder="Repeat password"
+                  value={form.confirm}
+                  onChange={(e) => setForm({ ...form, confirm: e.target.value })}
+                  required
+                  id="register-confirm"
+                />
+              </InputGroup>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-primary w-full"
+                id="register-submit"
+                style={{ padding: '1rem', marginTop: '0.5rem', fontSize: '1rem' }}
+              >
+                {loading ? (
+                  <><Loader2 size={16} className="animate-spin" /> Creating account...</>
+                ) : (
+                  <><span>Create Account</span><ArrowRight size={15} /></>
+                )}
+              </button>
+            </form>
+          )}
+
+          {!requires2FASetup && (
             <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
               Already have an account?{' '}
               <Link
