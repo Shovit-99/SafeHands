@@ -94,7 +94,7 @@ const InputGroup: React.FC<InputGroupProps> = ({ label, icon, children }) => (
 
 // ─── Login Page ───────────────────────────────────────────────────────────────
 export const LoginPage: React.FC = () => {
-  const { login } = useAuth();
+  const { login, persist2FA } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
@@ -152,7 +152,6 @@ export const LoginPage: React.FC = () => {
         data = await login2FA(tempToken, twoFaToken);
       }
       
-      const { persist2FA } = useAuth();
       if (persist2FA) {
         persist2FA(data.token, data.user);
       }
@@ -305,9 +304,8 @@ export const LoginPage: React.FC = () => {
   );
 };
 
-// ─── Register Page ────────────────────────────────────────────────────────────
 export const RegisterPage: React.FC = () => {
-  const { register } = useAuth();
+  const { register, persist2FA } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
@@ -363,7 +361,6 @@ export const RegisterPage: React.FC = () => {
     setLoading(true);
     try {
       const data = await setup2FA(tempToken, twoFaToken);
-      const { persist2FA } = useAuth();
       if (persist2FA) {
         persist2FA(data.token, data.user);
       }
