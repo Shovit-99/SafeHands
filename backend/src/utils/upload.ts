@@ -26,9 +26,17 @@ if (cloudinaryConfigured) {
     }),
   }) as multer.StorageEngine;
 } else {
-  // ── Memory Storage fallback (no Cloudinary) ─────────────────────────────────
-  console.warn('⚠️  Cloudinary not configured — images stored in memory (not persisted).');
-  storage = multer.memoryStorage();
+  // ── Local Disk Storage fallback (no Cloudinary) ─────────────────────────────
+  console.warn('⚠️  Cloudinary not configured — images stored locally in /uploads directory.');
+  storage = multer.diskStorage({
+    destination: (_req, _file, cb) => {
+      cb(null, 'uploads/');
+    },
+    filename: (_req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      cb(null, uniqueSuffix + '-' + file.originalname.replace(/\s+/g, '_'));
+    }
+  });
 }
 
 // ─── File Filter ──────────────────────────────────────────────────────────────

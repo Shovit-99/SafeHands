@@ -19,9 +19,14 @@ export const createItem = async (
       };
 
     // Cloudinary storage gives `f.path` (the Cloudinary URL).
-    // Memory storage gives no path — images are not persisted in that case.
+    // Local storage gives the relative path (e.g. `uploads\filename.jpg`).
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
     const images: string[] = (req.files as Array<Express.Multer.File & { path?: string }>)
-      ?.map((f) => f.path ?? '')
+      ?.map((f) => {
+        if (!f.path) return '';
+        if (f.path.startsWith('http')) return f.path; // Cloudinary URL
+        return `${baseUrl}/${f.path.replace(/\\/g, '/')}`; // Local URL
+      })
       .filter(Boolean) ?? [];
 
     const item = await Item.create({
@@ -196,18 +201,28 @@ export const updateItem = async (
   }
 };
 
-// ─── Delete Item (Admin only) ─────────────────────────────────────────────────
+// ─── Delete Item ──────────────────────────────────────────────────────────────
 export const deleteItem = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const item = await Item.findByIdAndDelete(req.params.id);
+    const item = await Item.findById(req.params.id);
 
     if (!item) {
       res.status(404).json({ success: false, message: 'Item not found.' });
       return;
     }
+
+    if (
+      String(item.reporterId) !== req.user!.id &&
+      req.user!.role !== 'admin'
+    ) {
+      res.status(403).json({ success: false, message: 'Not authorized to delete this item.' });
+      return;
+    }
+
+    await item.deleteOne();
 
     res.status(200).json({ success: true, message: 'Item deleted.' });
   } catch {

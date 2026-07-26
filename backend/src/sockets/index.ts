@@ -2,6 +2,7 @@ import { Server as SocketServer } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { verifyToken } from '../utils/jwt';
 import Message from '../models/Message';
+import Notification from '../models/Notification';
 import { buildChatId } from '../utils/jwt';
 
 export const initializeSocket = (httpServer: HttpServer): SocketServer => {
@@ -66,8 +67,23 @@ export const initializeSocket = (httpServer: HttpServer): SocketServer => {
           messageText,
         });
 
+        // Create a notification for the receiver
+        const notification = await Notification.create({
+          recipientId: receiverId,
+          senderId: user.id,
+          type: 'message',
+          title: 'New Message',
+          message: `You have a new message from ${user.email}`, // We don't have user.name in socket data, but email is fine
+          link: `/chat/${chatId}`,
+        });
+        
+        await notification.populate('senderId', 'name');
+
         // Emit to both sender and receiver's personal rooms so they get it anywhere in the app
         io.to(`user:${user.id}`).to(`user:${receiverId}`).emit('message:receive', saved);
+        
+        // Emit the notification badge update
+        io.to(`user:${receiverId}`).emit('notification:new', notification);
       }
     );
 

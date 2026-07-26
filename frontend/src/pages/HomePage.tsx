@@ -57,206 +57,255 @@ const HomePage: React.FC = () => {
   const hasActiveFilters = !!(filters.q || filters.category || filters.status);
 
   return (
-    <div className="flex-1 transition-colors duration-300">
-      {/* ─── Hero ──────────────────────────────────────────────────────────── */}
-      <div className="relative pt-24 pb-20 px-6 text-center overflow-hidden">
-        {/* Ambient background glow */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'var(--mesh-bg)',
-            opacity: 1,
-            pointerEvents: 'none',
-          }}
-        />
-
-        <div className="relative page-container">
-          {/* Tag pill */}
-          <div className="inline-flex items-center gap-2 mb-8 px-5 py-2 rounded-full shadow-sm glass-card hover-lift">
-            <Sparkles size={14} style={{ color: 'var(--accent-primary)' }} />
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 700 }}>
-              Campus Lost &amp; Found Network
-            </span>
-          </div>
-
-          <h1
-            className="font-black mb-6 tracking-tight text-[var(--text-primary)]"
+    <div className="animate-fadeInUp">
+      {/* ─── Header ─── */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+          <div
             style={{
-              fontFamily: 'var(--font-family-display)',
-              fontSize: 'clamp(3rem, 7vw, 5rem)',
-              lineHeight: 1.05,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.375rem',
+              padding: '0.25rem 0.75rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'var(--accent-light)',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              color: 'var(--accent-purple)',
             }}
           >
-            Lost something?<br />
-            <span className="gradient-text">We'll help you find it.</span>
-          </h1>
-
-          <p className="mb-12 max-w-xl mx-auto font-medium" style={{ color: 'var(--text-secondary)', fontSize: '1.15rem', lineHeight: 1.6 }}>
-            Report lost items, browse found objects, and connect with your campus community — all in one modern platform.
-          </p>
-
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto" id="search-form">
-            <div className="relative flex-1">
-              <Search size={20} className="absolute left-5 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-secondary)' }} />
-              <input
-                type="text"
-                className="input-field pl-14 h-14 shadow-md font-medium text-lg hover-lift"
-                style={{ borderRadius: '999px' }}
-                placeholder="Search items, descriptions..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                id="search-input"
-              />
-            </div>
-            <button type="submit" className="btn-primary px-8 h-14 text-base font-bold shadow-md hover-lift" id="search-btn">
-              <Search size={18} />
-              Search
-            </button>
-          </form>
+            <Sparkles size={12} />
+            Campus Network
+          </div>
         </div>
+        <h1 style={{
+          fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+          fontWeight: 800,
+          letterSpacing: '-0.03em',
+          lineHeight: 1.2,
+          marginBottom: '0.5rem',
+        }}>
+          Browse <span className="gradient-text">Lost & Found</span> Items
+        </h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', maxWidth: 500 }}>
+          Search campus items or report something new.
+        </p>
       </div>
 
-      {/* ─── Content ───────────────────────────────────────────────────────── */}
-      <div className="page-container pb-24">
-
-        {/* Filter Pills Row */}
-        <div className="flex items-center gap-3 mb-10 overflow-x-auto pb-2 scrollbar-hide w-full" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          {/* Status pills */}
-          {STATUSES.map((s) => {
-            const isActive = filters.status === s;
-            return (
-              <button
-                key={s}
-                onClick={() => setFilters((f) => ({ ...f, status: f.status === s ? '' : s, page: 1 }))}
-                className={`flex-shrink-0 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
-                  isActive 
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' 
-                    : 'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700'
-                }`}
-                id={`filter-status-${s}`}
-              >
-                {s}
-              </button>
-            );
-          })}
-
-          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 flex-shrink-0 mx-1" />
-
-          {/* Category pills */}
-          {CATEGORIES.map((c) => {
-            const isActive = filters.category === c;
-            return (
-              <button
-                key={c}
-                onClick={() => setFilters((f) => ({ ...f, category: f.category === c ? '' : c, page: 1 }))}
-                className={`flex-shrink-0 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
-                  isActive 
-                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' 
-                    : 'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700'
-                }`}
-                id={`filter-cat-${c}`}
-              >
-                {c}
-              </button>
-            );
-          })}
-
-          {hasActiveFilters && (
-            <button
-              onClick={clearFilters}
-              className="flex-shrink-0 flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors text-red-600 bg-red-50 hover:bg-red-100 dark:text-red-400 dark:bg-red-900/20 dark:hover:bg-red-900/40 ml-2"
-              id="clear-filters"
-            >
-              <X size={14} /> Clear All
-            </button>
-          )}
-
-          <span className="flex-shrink-0 ml-auto font-semibold px-2 text-sm text-slate-500 dark:text-slate-400">
-            {loading ? 'Searching...' : `${total} items`}
-          </span>
+      {/* ─── Search Bar ─── */}
+      <form
+        onSubmit={handleSearch}
+        style={{
+          display: 'flex',
+          gap: '0.75rem',
+          marginBottom: '1.25rem',
+          flexWrap: 'wrap',
+        }}
+        id="search-form"
+      >
+        <div style={{ position: 'relative', flex: '1 1 300px' }}>
+          <Search
+            size={18}
+            style={{
+              position: 'absolute',
+              left: '0.875rem',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'var(--text-tertiary)',
+            }}
+          />
+          <input
+            type="text"
+            className="input-field"
+            style={{ paddingLeft: '2.75rem', height: 44 }}
+            placeholder="Search items, descriptions..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            id="search-input"
+          />
         </div>
+        <button
+          type="submit"
+          className="btn-primary"
+          style={{ height: 44, padding: '0 1.5rem' }}
+          id="search-btn"
+        >
+          <Search size={16} />
+          Search
+        </button>
+      </form>
 
-        {/* Grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="rounded-3xl border border-transparent overflow-hidden animate-pulse" style={{ background: 'var(--card-bg)' }}>
-                <div className="aspect-[4/3]" style={{ background: 'var(--divider)' }} />
-                <div className="p-5 space-y-3">
-                  <div className="h-4 rounded-full w-3/4" style={{ background: 'var(--divider)' }} />
-                  <div className="h-3 rounded-full w-1/2" style={{ background: 'var(--divider)' }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : items.length === 0 ? (
-          <div className="text-center py-32 rounded-3xl" style={{ background: 'var(--card-bg)', border: '1px dashed var(--divider)' }}>
+      {/* ─── Filter Pills ─── */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          marginBottom: '1.5rem',
+          overflowX: 'auto',
+          paddingBottom: '0.25rem',
+          scrollbarWidth: 'none',
+        }}
+      >
+        {STATUSES.map((s) => (
+          <button
+            key={s}
+            onClick={() => setFilters((f) => ({ ...f, status: f.status === s ? '' : s, page: 1 }))}
+            className={`tag-pill ${filters.status === s ? 'active' : 'inactive'}`}
+            id={`filter-status-${s}`}
+          >
+            {s}
+          </button>
+        ))}
+
+        <div style={{ width: 1, height: 20, background: 'var(--border-subtle)', flexShrink: 0, margin: '0 0.25rem' }} />
+
+        {CATEGORIES.map((c) => (
+          <button
+            key={c}
+            onClick={() => setFilters((f) => ({ ...f, category: f.category === c ? '' : c, page: 1 }))}
+            className={`tag-pill ${filters.category === c ? 'active' : 'inactive'}`}
+            id={`filter-cat-${c}`}
+          >
+            {c}
+          </button>
+        ))}
+
+        {hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.375rem',
+              padding: '0.375rem 0.75rem',
+              borderRadius: 'var(--radius-full)',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              background: 'rgba(239, 68, 68, 0.1)',
+              color: '#EF4444',
+              border: '1px solid rgba(239, 68, 68, 0.2)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+            id="clear-filters"
+          >
+            <X size={14} /> Clear
+          </button>
+        )}
+
+        <span style={{
+          marginLeft: 'auto',
+          fontSize: '0.8rem',
+          fontWeight: 600,
+          color: 'var(--text-tertiary)',
+          whiteSpace: 'nowrap',
+          flexShrink: 0,
+        }}>
+          {loading ? 'Searching...' : `${total} items`}
+        </span>
+      </div>
+
+      {/* ─── Grid ─── */}
+      {loading ? (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+          gap: '1rem',
+        }}>
+          {Array.from({ length: 8 }).map((_, i) => (
             <div
-              className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
-              style={{
-                background: 'var(--accent-light)',
-              }}
+              key={i}
+              className="card"
+              style={{ overflow: 'hidden' }}
             >
-              <Search size={32} style={{ color: 'var(--accent-primary)' }} />
+              <div style={{ aspectRatio: '4/3', background: 'rgba(255,255,255,0.03)' }} />
+              <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{ height: 14, borderRadius: 'var(--radius-full)', width: '75%', background: 'rgba(255,255,255,0.04)' }} />
+                <div style={{ height: 10, borderRadius: 'var(--radius-full)', width: '50%', background: 'rgba(255,255,255,0.03)' }} />
+              </div>
             </div>
-            <h3
-              className="text-3xl font-bold mb-3"
-              style={{ fontFamily: 'var(--font-family-display)', color: 'var(--text-primary)' }}
-            >
+          ))}
+        </div>
+      ) : items.length === 0 ? (
+        <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
+          <div className="empty-state">
+            <div className="empty-state-icon">
+              <Search size={32} style={{ color: 'var(--accent-purple)' }} />
+            </div>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>
               No items found
             </h3>
-            <p className="font-medium" style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '2rem' }}>
-              {hasActiveFilters ? "We couldn't find anything matching your filters." : 'Be the first to report a lost or found item on campus!'}
+            <p style={{ color: 'var(--text-tertiary)', fontSize: '0.875rem', marginBottom: '1.5rem', maxWidth: 320 }}>
+              {hasActiveFilters
+                ? "We couldn't find anything matching your filters."
+                : 'Be the first to report a lost or found item on campus!'}
             </p>
             {!hasActiveFilters && (
-              <button onClick={() => navigate('/report')} className="btn-primary px-8 h-12 text-base shadow-md mx-auto flex items-center">
-                Report an Item <ArrowRight size={18} className="ml-2" />
+              <button onClick={() => navigate('/report')} className="btn-primary">
+                Report an Item <ArrowRight size={16} />
               </button>
             )}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {items.map((item) => (
-              <ItemCard
-                key={item._id}
-                item={item}
-                onClick={() => navigate(`/items/${item._id}`)}
-              />
-            ))}
-          </div>
-        )}
+        </div>
+      ) : (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+          gap: '1rem',
+        }}>
+          {items.map((item) => (
+            <ItemCard
+              key={item._id}
+              item={item}
+              onClick={() => navigate(`/items/${item._id}`)}
+            />
+          ))}
+        </div>
+      )}
 
-        {/* Pagination */}
-        {pages > 1 && (
-          <div className="flex justify-center gap-3 mt-16">
-            {Array.from({ length: pages }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setFilters((f) => ({ ...f, page: i + 1 }))}
-                className="w-12 h-12 rounded-full text-base font-black transition-all hover:scale-105"
-                style={
-                  filters.page === i + 1
-                    ? {
-                        background: 'var(--accent-gradient)',
-                        color: '#ffffff',
-                        boxShadow: '0 8px 24px var(--accent-light)',
-                      }
-                    : {
-                        background: 'var(--card-bg)',
-                        color: 'var(--text-secondary)',
-                        border: '1px solid var(--divider)',
-                      }
-                }
-                id={`page-${i + 1}`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+      {/* ─── Pagination ─── */}
+      {pages > 1 && (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '0.5rem',
+          marginTop: '2rem',
+        }}>
+          {Array.from({ length: pages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setFilters((f) => ({ ...f, page: i + 1 }))}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 'var(--radius-md)',
+                fontSize: '0.875rem',
+                fontWeight: 700,
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                ...(filters.page === i + 1
+                  ? {
+                      background: 'var(--accent-gradient)',
+                      color: '#fff',
+                      boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)',
+                    }
+                  : {
+                      background: 'var(--bg-card)',
+                      color: 'var(--text-secondary)',
+                      border: '1px solid var(--border-subtle)',
+                    }),
+              }}
+              id={`page-${i + 1}`}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

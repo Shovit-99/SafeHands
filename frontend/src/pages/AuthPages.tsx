@@ -17,7 +17,7 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
         width: '480px',
         height: '480px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(0,212,184,0.06) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%)',
         pointerEvents: 'none',
       }}
     />
@@ -29,7 +29,7 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
         width: '360px',
         height: '360px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(95,240,222,0.04) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(236,72,153,0.06) 0%, transparent 70%)',
         pointerEvents: 'none',
       }}
     />
@@ -44,22 +44,22 @@ const AuthLogo: React.FC<{ title: string; subtitle: string }> = ({ title, subtit
       <div
         className="w-11 h-11 rounded-2xl flex items-center justify-center"
         style={{
-          background: 'linear-gradient(135deg, #00bfa5 0%, #5ff0de 100%)',
-          boxShadow: '0 0 24px rgba(0, 212, 184, 0.35)',
+          background: 'var(--accent-gradient)',
+          boxShadow: '0 0 24px rgba(124, 58, 237, 0.35)',
         }}
       >
-        <Package size={20} style={{ color: '#06080c' }} />
+        <Package size={20} style={{ color: '#ffffff' }} />
       </div>
       <span
         className="text-2xl font-bold gradient-text"
-        style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+        style={{ fontFamily: 'Inter, sans-serif' }}
       >
         LostHub
       </span>
     </div>
     <h1
       className="text-3xl font-bold text-white mb-2"
-      style={{ fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '-0.03em' }}
+      style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.03em' }}
     >
       {title}
     </h1>
@@ -126,7 +126,7 @@ export const LoginPage: React.FC = () => {
 
         <div
           className="glass-card p-8"
-          style={{ border: '1px solid rgba(0,212,184,0.1)' }}
+          style={{ border: '1px solid rgba(124,58,237,0.1)' }}
         >
           <form onSubmit={handleSubmit} className="space-y-5">
             <InputGroup label="Email Address" icon={<Mail size={15} />}>
@@ -183,7 +183,7 @@ export const LoginPage: React.FC = () => {
             <Link
               to="/register"
               className="font-semibold transition-colors"
-              style={{ color: '#00d4b8' }}
+              style={{ color: '#7C3AED' }}
             >
               Create one
             </Link>
@@ -238,7 +238,7 @@ export const RegisterPage: React.FC = () => {
 
         <div
           className="glass-card p-8"
-          style={{ border: '1px solid rgba(0,212,184,0.1)' }}
+          style={{ border: '1px solid rgba(124,58,237,0.1)' }}
         >
           <form onSubmit={handleSubmit} className="space-y-5">
             <InputGroup label="Full Name" icon={<User size={15} />}>
@@ -318,7 +318,7 @@ export const RegisterPage: React.FC = () => {
             <Link
               to="/login"
               className="font-semibold transition-colors"
-              style={{ color: '#00d4b8' }}
+              style={{ color: '#7C3AED' }}
             >
               Sign in
             </Link>

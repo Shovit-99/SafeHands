@@ -34,7 +34,7 @@ router.post(
 // PATCH /api/items/:id   — Authenticated (owner or admin)
 router.patch('/:id', authenticate, validateUpdateItem, updateItem);
 
-// DELETE /api/items/:id  — Admin only
-router.delete('/:id', authenticate, authorize('admin'), deleteItem);
+// DELETE /api/items/:id  — Authenticated (owner or admin)
+router.delete('/:id', authenticate, deleteItem);
 
 export default router;

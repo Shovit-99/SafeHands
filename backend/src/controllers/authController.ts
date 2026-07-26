@@ -130,3 +130,70 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ success: false, message: 'Failed to fetch user.' });
   }
 };
+
+// ─── Update Profile ─────────────────────────────────────────────────────────────
+export const updateProfile = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name } = req.body as { name: string };
+    
+    if (!name || name.trim().length < 2) {
+      res.status(400).json({ success: false, message: 'Name must be at least 2 characters.' });
+      return;
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user?.id,
+      { name: name.trim() },
+      { new: true, runValidators: true }
+    );
+
+    if (!user) {
+      res.status(404).json({ success: false, message: 'User not found.' });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully.',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update profile.' });
+  }
+};
+
+// ─── Update Password ──────────────────────────────────────────────────────────
+export const updatePassword = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword || newPassword.length < 8) {
+      res.status(400).json({ success: false, message: 'New password must be at least 8 characters.' });
+      return;
+    }
+
+    const user = await User.findById(req.user?.id).select('+password');
+    if (!user) {
+      res.status(404).json({ success: false, message: 'User not found.' });
+      return;
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      res.status(401).json({ success: false, message: 'Incorrect current password.' });
+      return;
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Password updated successfully.' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update password.' });
+  }
+};

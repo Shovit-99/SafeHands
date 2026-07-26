@@ -7,6 +7,7 @@ import { errorHandler } from './middleware/validators';
 import authRoutes from './routes/auth';
 import itemRoutes from './routes/items';
 import messageRoutes from './routes/messages';
+import notificationRoutes from './routes/notifications';
 import { initializeSocket } from './sockets';
 
 // ─── App Setup ────────────────────────────────────────────────────────────────
@@ -22,11 +23,13 @@ app.use(
 );
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use('/uploads', express.static('uploads'));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {

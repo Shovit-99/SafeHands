@@ -6,9 +6,9 @@ import type { Item } from '../types';
 import { useAuth } from '../context/AuthContext';
 
 const STATUS_STYLES: Record<Item['status'], { bg: string; color: string; border: string }> = {
-  Lost: { bg: 'rgba(239,68,68,0.1)', color: '#ef4444', border: 'rgba(239,68,68,0.22)' },
-  Found: { bg: 'var(--accent-light)', color: 'var(--accent-primary)', border: 'var(--accent-primary)' },
-  Claimed: { bg: 'rgba(184,169,255,0.1)', color: '#8b5cf6', border: 'rgba(184,169,255,0.22)' },
+  Lost: { bg: 'rgba(239, 68, 68, 0.1)', color: '#EF4444', border: 'rgba(239, 68, 68, 0.2)' },
+  Found: { bg: 'rgba(34, 197, 94, 0.1)', color: '#22C55E', border: 'rgba(34, 197, 94, 0.2)' },
+  Claimed: { bg: 'rgba(124, 58, 237, 0.1)', color: '#A78BFA', border: 'rgba(124, 58, 237, 0.2)' },
 };
 
 const ItemDetailPage: React.FC = () => {
@@ -29,7 +29,7 @@ const ItemDetailPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center min-h-[60vh]">
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
         <div className="spinner" />
       </div>
     );
@@ -42,28 +42,31 @@ const ItemDetailPage: React.FC = () => {
   const statusStyle = STATUS_STYLES[item.status];
 
   return (
-    <div className="flex-1 page-container py-12 transition-colors duration-300">
+    <div className="animate-fadeInUp" style={{ padding: '2rem 0', maxWidth: 1080, margin: '0 auto' }}>
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 mb-10 transition-all group w-max"
-        style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: 600 }}
+        className="btn-ghost"
+        style={{ marginBottom: '2rem', padding: '0.5rem 1rem', display: 'inline-flex' }}
         id="back-btn"
       >
-        <div className="p-2 rounded-full bg-[var(--card-bg)] border border-[var(--divider)] shadow-sm group-hover:scale-105 transition-all">
-          <ArrowLeft size={16} />
-        </div>
-        <span className="group-hover:text-[var(--text-primary)] transition-colors">Back to items</span>
+        <ArrowLeft size={16} />
+        Back to items
       </button>
 
-      <div className="grid lg:grid-cols-2 gap-12">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gap: '2.5rem',
+      }}>
         {/* Image Gallery */}
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div
-            className="aspect-[4/3] overflow-hidden relative shadow-sm group"
+            className="card"
             style={{
-              borderRadius: '24px',
-              background: 'var(--card-bg)',
-              border: '1px solid var(--divider)',
+              aspectRatio: '4/3',
+              overflow: 'hidden',
+              position: 'relative',
+              padding: 0,
             }}
           >
             {images.length > 0 ? (
@@ -71,37 +74,80 @@ const ItemDetailPage: React.FC = () => {
                 <img
                   src={images[imgIndex]}
                   alt={item.title}
-                  className="w-full h-full object-cover"
-                  style={{ transition: 'opacity 0.2s ease' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.2s ease' }}
                 />
                 {images.length > 1 && (
                   <>
                     <button
                       onClick={() => setImgIndex((i) => Math.max(i - 1, 0))}
                       disabled={imgIndex === 0}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full transition-all disabled:opacity-0 opacity-0 group-hover:opacity-100 disabled:pointer-events-none hover:scale-110 shadow-md"
-                      style={{ background: 'rgba(255,255,255,0.9)', color: '#000' }}
+                      style={{
+                        position: 'absolute',
+                        left: '1rem',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        padding: '0.5rem',
+                        borderRadius: '50%',
+                        background: 'rgba(0,0,0,0.6)',
+                        backdropFilter: 'blur(8px)',
+                        color: '#fff',
+                        border: 'none',
+                        cursor: imgIndex === 0 ? 'not-allowed' : 'pointer',
+                        opacity: imgIndex === 0 ? 0.3 : 1,
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => { if (imgIndex !== 0) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.8)'; }}
+                      onMouseLeave={(e) => { if (imgIndex !== 0) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.6)'; }}
                     >
                       <ChevronLeft size={20} />
                     </button>
                     <button
                       onClick={() => setImgIndex((i) => Math.min(i + 1, images.length - 1))}
                       disabled={imgIndex === images.length - 1}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full transition-all disabled:opacity-0 opacity-0 group-hover:opacity-100 disabled:pointer-events-none hover:scale-110 shadow-md"
-                      style={{ background: 'rgba(255,255,255,0.9)', color: '#000' }}
+                      style={{
+                        position: 'absolute',
+                        right: '1rem',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        padding: '0.5rem',
+                        borderRadius: '50%',
+                        background: 'rgba(0,0,0,0.6)',
+                        backdropFilter: 'blur(8px)',
+                        color: '#fff',
+                        border: 'none',
+                        cursor: imgIndex === images.length - 1 ? 'not-allowed' : 'pointer',
+                        opacity: imgIndex === images.length - 1 ? 0.3 : 1,
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => { if (imgIndex !== images.length - 1) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.8)'; }}
+                      onMouseLeave={(e) => { if (imgIndex !== images.length - 1) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,0,0,0.6)'; }}
                     >
                       <ChevronRight size={20} />
                     </button>
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 p-2 rounded-full" style={{ background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }}>
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '1rem',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      display: 'flex',
+                      gap: '0.375rem',
+                      padding: '0.375rem 0.5rem',
+                      borderRadius: 'var(--radius-full)',
+                      background: 'rgba(0,0,0,0.5)',
+                      backdropFilter: 'blur(8px)',
+                    }}>
                       {images.map((_, i) => (
                         <button
                           key={i}
                           onClick={() => setImgIndex(i)}
-                          className="rounded-full transition-all"
                           style={{
-                            width: i === imgIndex ? '24px' : '8px',
-                            height: '8px',
-                            background: i === imgIndex ? 'var(--accent-primary)' : 'rgba(255,255,255,0.5)',
+                            width: i === imgIndex ? 20 : 6,
+                            height: 6,
+                            borderRadius: 'var(--radius-full)',
+                            background: i === imgIndex ? 'var(--accent-purple)' : 'rgba(255,255,255,0.4)',
+                            border: 'none',
+                            transition: 'all 0.3s ease',
+                            cursor: 'pointer',
                           }}
                         />
                       ))}
@@ -110,26 +156,33 @@ const ItemDetailPage: React.FC = () => {
                 )}
               </>
             ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <Tag size={64} style={{ color: 'var(--text-secondary)', opacity: 0.2 }} />
+              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Tag size={64} style={{ color: 'var(--text-tertiary)', opacity: 0.3 }} />
               </div>
             )}
           </div>
 
           {/* Thumbnail strip */}
           {images.length > 1 && (
-            <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
+            <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }} className="custom-scrollbar">
               {images.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setImgIndex(i)}
-                  className="flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden transition-all shadow-sm"
                   style={{
-                    border: i === imgIndex ? '2px solid var(--accent-primary)' : '2px solid transparent',
+                    flexShrink: 0,
+                    width: 72,
+                    height: 72,
+                    borderRadius: 'var(--radius-md)',
+                    overflow: 'hidden',
+                    border: i === imgIndex ? '2px solid var(--accent-purple)' : '2px solid transparent',
                     opacity: i === imgIndex ? 1 : 0.6,
+                    transition: 'all 0.2s ease',
+                    cursor: 'pointer',
+                    background: 'var(--bg-card)',
                   }}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </button>
               ))}
             </div>
@@ -137,56 +190,92 @@ const ItemDetailPage: React.FC = () => {
         </div>
 
         {/* Details */}
-        <div className="space-y-8">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           <div>
-            <div className="flex items-center gap-3 mb-4">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
               <span
-                className="px-4 py-1.5 rounded-full text-sm font-bold"
-                style={{ background: statusStyle.bg, color: statusStyle.color, border: `1px solid ${statusStyle.border}` }}
+                style={{
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  background: statusStyle.bg,
+                  color: statusStyle.color,
+                  border: `1px solid ${statusStyle.border}`,
+                }}
               >
                 {item.status}
               </span>
               <span
-                className="px-4 py-1.5 rounded-full text-sm font-bold"
-                style={{ background: 'var(--card-bg)', color: 'var(--text-secondary)', border: '1px solid var(--divider)', pointerEvents: 'none' }}
+                style={{
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  background: 'rgba(255,255,255,0.05)',
+                  color: 'var(--text-secondary)',
+                  border: '1px solid var(--border-subtle)',
+                }}
               >
                 {item.category}
               </span>
             </div>
             <h1
-              className="text-4xl font-black mb-4 tracking-tight"
-              style={{ fontFamily: 'var(--font-family-display)', color: 'var(--text-primary)' }}
+              style={{
+                fontSize: 'clamp(2rem, 4vw, 2.75rem)',
+                fontWeight: 800,
+                marginBottom: '1rem',
+                letterSpacing: '-0.03em',
+                color: 'var(--text-primary)',
+                lineHeight: 1.1,
+              }}
             >
               {item.title}
             </h1>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, fontSize: '1.05rem', fontWeight: 500 }}>{item.description}</p>
+            <p style={{
+              color: 'var(--text-secondary)',
+              lineHeight: 1.7,
+              fontSize: '1rem',
+              fontWeight: 500,
+            }}>
+              {item.description}
+            </p>
           </div>
 
           {/* Meta Card */}
-          <div className="p-6 rounded-3xl space-y-5 shadow-sm" style={{ background: 'var(--card-bg)', border: '1px solid var(--divider)' }}>
+          <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {[
-              { icon: <MapPin size={18} style={{ color: 'var(--accent-primary)' }} />, label: 'Location', value: item.locationName },
+              { icon: <MapPin size={18} style={{ color: 'var(--accent-purple)' }} />, label: 'Location', value: item.locationName },
               {
-                icon: <Clock size={18} style={{ color: 'var(--accent-primary)' }} />,
+                icon: <Clock size={18} style={{ color: 'var(--accent-purple)' }} />,
                 label: 'Reported',
                 value: new Date(item.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
               },
               {
-                icon: <User size={18} style={{ color: 'var(--accent-primary)' }} />,
+                icon: <User size={18} style={{ color: 'var(--accent-purple)' }} />,
                 label: 'Reported by',
                 value: isOwner ? 'You' : item.reporterId?.name || 'Anonymous',
               },
             ].map(({ icon, label, value }) => (
-              <div key={label} className="flex items-center gap-4">
+              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <div
-                  className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'var(--accent-light)', border: '1px solid rgba(0,212,184,0.1)' }}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 'var(--radius-md)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    background: 'var(--accent-light)',
+                    border: '1px solid rgba(124, 58, 237, 0.1)',
+                  }}
                 >
                   {icon}
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '2px', fontWeight: 600 }}>{label}</div>
-                  <div className="font-bold" style={{ fontSize: '1.1rem', color: 'var(--text-primary)' }}>{value}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginBottom: '0.125rem', fontWeight: 600 }}>{label}</div>
+                  <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--text-primary)' }}>{value}</div>
                 </div>
               </div>
             ))}
@@ -196,24 +285,38 @@ const ItemDetailPage: React.FC = () => {
           {isAuthenticated && !isOwner && (
             <button
               onClick={() => navigate(`/chat?with=${item.reporterId._id}&peerName=${encodeURIComponent(item.reporterId.name)}&item=${item._id}`)}
-              className="btn-primary w-full py-4 text-lg font-bold shadow-md hover:shadow-lg rounded-2xl flex items-center justify-center"
+              className="btn-primary"
+              style={{ width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: 700 }}
               id="contact-btn"
             >
-              <MessageCircle size={20} className="mr-2" />
+              <MessageCircle size={20} />
               Contact Reporter
             </button>
           )}
 
           {isOwner && (
             <div
-              className="p-5 text-center rounded-2xl"
-              style={{ background: 'var(--accent-light)', border: '1px dashed var(--accent-primary)' }}
+              style={{
+                padding: '1.25rem',
+                textAlign: 'center',
+                borderRadius: 'var(--radius-md)',
+                background: 'rgba(124, 58, 237, 0.08)',
+                border: '1px dashed rgba(124, 58, 237, 0.3)',
+              }}
             >
-              <p style={{ color: 'var(--text-primary)', fontSize: '0.95rem', fontWeight: 600 }}>
+              <p style={{ color: 'var(--text-primary)', fontSize: '0.875rem', fontWeight: 600 }}>
                 This is your report. Manage it from your{' '}
                 <button
                   onClick={() => navigate('/profile')}
-                  style={{ color: 'var(--accent-primary)', fontWeight: 800, textDecoration: 'underline' }}
+                  style={{
+                    color: 'var(--accent-purple)',
+                    fontWeight: 800,
+                    textDecoration: 'underline',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                  }}
                 >
                   profile
                 </button>

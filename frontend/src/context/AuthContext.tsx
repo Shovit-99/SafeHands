@@ -8,6 +8,7 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  updateUser: (user: User) => void;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
@@ -49,6 +50,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     persist(data.token, data.user);
   };
 
+  const updateUser = (newUser: User) => {
+    if (token) {
+      persist(token, newUser);
+    }
+  };
+
   const register = async (
     name: string,
     email: string,
@@ -77,6 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         token,
         isLoading,
         login,
+        updateUser,
         register,
         logout,
         isAuthenticated: !!user,

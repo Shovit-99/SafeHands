@@ -25,42 +25,74 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
 
   return (
     <div
-      className="item-card group glass-card hover-lift"
+      className="card-interactive group"
       onClick={onClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
-      style={{
-        borderRadius: '1.5rem',
-        overflow: 'hidden',
-      }}
+      style={{ overflow: 'hidden' }}
     >
       {/* Image */}
-      <div className="aspect-[4/3] relative overflow-hidden" style={{ background: 'var(--bg-color)' }}>
+      <div
+        style={{
+          aspectRatio: '4/3',
+          position: 'relative',
+          overflow: 'hidden',
+          background: 'var(--bg-secondary)',
+        }}
+      >
         {item.images?.[0] ? (
           <img
             src={item.images[0]}
             alt={item.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transition: 'transform 0.5s ease',
+            }}
             loading="lazy"
+            onMouseEnter={(e) => {
+              (e.target as HTMLImageElement).style.transform = 'scale(1.05)';
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLImageElement).style.transform = 'scale(1)';
+            }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-            <Tag size={40} style={{ color: 'var(--text-secondary)', opacity: 0.3 }} />
+          <div style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <Tag size={36} style={{ color: 'var(--text-tertiary)', opacity: 0.3 }} />
           </div>
         )}
 
         {/* Gradient overlay */}
         <div
-          className="absolute inset-0 opacity-60 transition-opacity group-hover:opacity-40"
           style={{
-            background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%)',
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%)',
+            opacity: 0.7,
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'none',
           }}
         />
 
-        {/* Status badge overlay */}
-        <div className="absolute top-4 left-4">
-          <span className={STATUS_CLASSES[item.status]} style={{ padding: '0.4rem 1rem', fontSize: '0.75rem', fontWeight: 800, backdropFilter: 'blur(8px)' }}>
+        {/* Status badge */}
+        <div style={{ position: 'absolute', top: 12, left: 12 }}>
+          <span
+            className={STATUS_CLASSES[item.status]}
+            style={{
+              backdropFilter: 'blur(8px)',
+              fontSize: '0.6875rem',
+              fontWeight: 700,
+            }}
+          >
             {item.status}
           </span>
         </div>
@@ -68,11 +100,18 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
         {/* Image count */}
         {item.images?.length > 1 && (
           <div
-            className="absolute top-4 right-4 text-white text-xs px-2.5 py-1 rounded-full font-bold shadow-sm"
             style={{
-              background: 'rgba(0,0,0,0.4)',
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              fontSize: '0.6875rem',
+              fontWeight: 700,
+              padding: '0.125rem 0.5rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(0,0,0,0.5)',
+              color: '#fff',
               backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255,255,255,0.15)',
+              border: '1px solid rgba(255,255,255,0.1)',
             }}
           >
             +{item.images.length - 1}
@@ -81,33 +120,64 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       </div>
 
       {/* Content */}
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <h3 className="font-bold text-lg leading-tight line-clamp-1" style={{ fontFamily: 'var(--font-family-display)', color: 'var(--text-primary)' }}>
+      <div style={{ padding: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.375rem' }}>
+          <h3
+            className="line-clamp-1"
+            style={{
+              fontWeight: 700,
+              fontSize: '0.9375rem',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.01em',
+            }}
+          >
             {item.title}
           </h3>
           <span
-            className="text-xs flex-shrink-0 px-2.5 py-1 rounded-full whitespace-nowrap font-bold"
             style={{
+              fontSize: '0.6875rem',
+              flexShrink: 0,
+              padding: '0.125rem 0.5rem',
+              borderRadius: 'var(--radius-full)',
               background: 'var(--accent-light)',
-              color: 'var(--accent-primary)',
+              color: 'var(--accent-purple)',
+              fontWeight: 600,
             }}
           >
             {item.category}
           </span>
         </div>
 
-        <p className="text-sm line-clamp-2 mb-4 leading-relaxed font-medium" style={{ color: 'var(--text-secondary)' }}>
+        <p
+          className="line-clamp-2"
+          style={{
+            fontSize: '0.8125rem',
+            color: 'var(--text-tertiary)',
+            marginBottom: '0.75rem',
+            lineHeight: 1.5,
+          }}
+        >
           {item.description}
         </p>
 
-        <div className="flex items-center justify-between pt-4 border-t" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', borderColor: 'var(--divider)', fontWeight: 600 }}>
-          <div className="flex items-center gap-1.5">
-            <MapPin size={14} style={{ color: 'var(--accent-primary)' }} />
-            <span className="truncate max-w-[120px]">{item.locationName}</span>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingTop: '0.75rem',
+            borderTop: '1px solid var(--border-subtle)',
+            fontSize: '0.75rem',
+            color: 'var(--text-tertiary)',
+            fontWeight: 500,
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+            <MapPin size={12} style={{ color: 'var(--accent-purple)' }} />
+            <span className="truncate" style={{ maxWidth: 110 }}>{item.locationName}</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Clock size={14} style={{ color: 'var(--accent-primary)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+            <Clock size={12} style={{ color: 'var(--accent-purple)' }} />
             <span>{timeAgo(item.createdAt)}</span>
           </div>
         </div>
