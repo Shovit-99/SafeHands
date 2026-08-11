@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Search, PlusCircle, MessageCircle,
-  BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Package
+  BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Package, Handshake
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -21,7 +21,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/profile', requireAuth: true },
-  { icon: Search, label: 'Browse Items', path: '/' },
+  { icon: Search, label: 'Browse Items', path: '/explore' },
   { icon: PlusCircle, label: 'Report Item', path: '/report', requireAuth: true },
   { icon: MessageCircle, label: 'Messages', path: '/chat', requireAuth: true },
   { icon: BarChart3, label: 'Analytics', path: '/admin', requireAdmin: true },
@@ -103,24 +103,24 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
           style={{
             width: 36,
             height: 36,
-            borderRadius: 'var(--radius-md)',
-            background: 'var(--accent-gradient)',
+            borderRadius: '8px',
+            background: 'var(--metal-dark)',
+            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            boxShadow: '0 4px 14px rgba(204, 255, 0, 0.3)',
           }}
         >
-          <Package size={18} color="#000" />
+          <Handshake size={20} color="var(--accent-lime)" />
         </div>
         {!collapsed && (
           <span
             style={{
-              fontSize: '1.125rem',
+              fontSize: '1.2rem',
               fontWeight: 800,
-              letterSpacing: '-0.025em',
-              color: 'var(--text-primary)',
+              letterSpacing: '0.5px',
+              color: '#1a222c',
             }}
           >
             SafeHands
@@ -195,7 +195,6 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
             onClick={handleLogout}
             className="sidebar-nav-item"
             title={collapsed ? 'Sign out' : undefined}
-            style={{ color: 'var(--text-tertiary)' }}
             id="sidebar-logout"
           >
             <span className="sidebar-nav-icon">

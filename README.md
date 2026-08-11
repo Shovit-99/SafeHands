@@ -5,7 +5,7 @@
 **🚀 Live Demo:** [https://safe-hands-eta.vercel.app](https://safe-hands-eta.vercel.app)
 **🔌 Backend API:** [https://safehands-ad69.onrender.com](https://safehands-ad69.onrender.com)
 
-**SafeHands** (formerly *LostHub*) is the ultimate community-driven campus lost-and-found platform. It connects students who have lost items with those who have found them, focusing on security, user-centered design, and seamless retrieval.
+**SafeHands** (formerly *SafeHands*) is the ultimate community-driven campus lost-and-found platform. It connects students who have lost items with those who have found them, focusing on security, user-centered design, and seamless retrieval.
 
 ## ✨ Features
 

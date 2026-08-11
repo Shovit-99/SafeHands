@@ -167,12 +167,10 @@ const ProfilePage: React.FC = () => {
         >
           <StatCard
             icon={Box}
-            iconBg="rgba(124, 58, 237, 0.15)"
+            iconBg="rgba(0, 136, 255, 0.15)"
             iconColor="#7C3AED"
             label="Total Reports"
             value={myItems.length}
-            trend={{ value: '+12%', isUp: true }}
-            sparklineData={[2, 4, 3, 7, 5, 8, 6]}
             delay={0}
           />
           <StatCard
@@ -182,18 +180,14 @@ const ProfilePage: React.FC = () => {
             label="Lost Items"
             value={lostItems.length}
             suffix=""
-            trend={{ value: `${activeItems.length} active`, isUp: false }}
-            sparklineData={[1, 3, 2, 4, 2, 3, 1]}
             delay={100}
           />
           <StatCard
             icon={SearchIcon}
-            iconBg="rgba(34, 197, 94, 0.12)"
-            iconColor="#22C55E"
+            iconBg="rgba(0, 136, 255, 0.12)"
+            iconColor="#0088FF"
             label="Found Items"
             value={foundItems.length}
-            trend={{ value: 'Available', isUp: true }}
-            sparklineData={[3, 5, 4, 6, 8, 7, 9]}
             delay={200}
           />
           <StatCard
@@ -203,8 +197,6 @@ const ProfilePage: React.FC = () => {
             label="Success Rate"
             value={successRate}
             suffix="%"
-            trend={{ value: `${claimedItems.length} claimed`, isUp: true }}
-            sparklineData={[40, 55, 60, 70, 65, 80, 89]}
             delay={300}
           />
         </div>
@@ -240,9 +232,9 @@ const ProfilePage: React.FC = () => {
           <ActivityTimeline />
           <AnalyticsCard
             data={{
-              lost: lostItems.length || 8,
-              found: foundItems.length || 16,
-              claimed: claimedItems.length || 12,
+              lost: lostItems.length,
+              found: foundItems.length,
+              claimed: claimedItems.length,
             }}
           />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

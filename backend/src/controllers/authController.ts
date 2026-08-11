@@ -62,7 +62,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 // ─── Login ────────────────────────────────────────────────────────────────────
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, password } = req.body as { email: string; password: string };
+    const { email, password, trustToken } = req.body as { email: string; password: string; trustToken?: string };
 
     if (!email || !password) {
       res
@@ -94,8 +94,31 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       role: user.role,
     };
 
-    // If 2FA is enabled, require standard 2FA login
+    // If 2FA is enabled, require standard 2FA login (unless valid trust token)
     if (user.isTwoFactorEnabled) {
+      if (trustToken) {
+        try {
+          const decoded = jwt.verify(trustToken, process.env.JWT_SECRET as string) as any;
+          if (decoded.id === String(user._id) && decoded.isTrustToken) {
+            const finalToken = signToken(payload);
+            res.status(200).json({
+              success: true,
+              message: 'Login successful.',
+              token: finalToken,
+              user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+              },
+            });
+            return;
+          }
+        } catch (err) {
+          // Invalid or expired trust token, proceed to standard 2FA
+        }
+      }
+
       const tempToken = jwt.sign(
         { id: String(user._id), email: user.email, isTemp: true },
         process.env.JWT_SECRET as string,
@@ -333,10 +356,17 @@ export const login2FA = async (req: Request, res: Response): Promise<void> => {
 
     const finalToken = signToken(payload);
 
+    const trustToken = jwt.sign(
+      { id: String(user._id), isTrustToken: true },
+      process.env.JWT_SECRET as string,
+      { expiresIn: '30d' }
+    );
+
     res.status(200).json({
       success: true,
       message: 'Login successful.',
       token: finalToken,
+      trustToken,
       user: {
         id: user._id,
         name: user.name,
@@ -399,10 +429,17 @@ export const setup2FA = async (req: Request, res: Response): Promise<void> => {
 
     const finalToken = signToken(payload);
 
+    const trustToken = jwt.sign(
+      { id: String(user._id), isTrustToken: true },
+      process.env.JWT_SECRET as string,
+      { expiresIn: '30d' }
+    );
+
     res.status(200).json({
       success: true,
       message: '2FA setup successful.',
       token: finalToken,
+      trustToken,
       user: {
         id: user._id,
         name: user.name,

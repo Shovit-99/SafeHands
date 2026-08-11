@@ -46,7 +46,7 @@ const STATUSES: { value: ItemStatus; label: string; activeStyle: React.CSSProper
   {
     value: 'Found',
     label: '🟢 Found',
-    activeStyle: { background: 'rgba(34,197,94,0.1)', borderColor: 'rgba(34,197,94,0.4)', color: '#22C55E' },
+    activeStyle: { background: 'rgba(0,136,255,0.1)', borderColor: 'rgba(0,136,255,0.4)', color: '#0088FF' },
     inactiveStyle: { background: 'transparent', borderColor: 'var(--border-subtle)', color: 'var(--text-secondary)' },
   },
 ];
@@ -515,14 +515,14 @@ const ReportItemPage: React.FC = () => {
                 gap: '0.625rem',
                 padding: '0.75rem 1rem',
                 borderRadius: 'var(--radius-md)',
-                background: 'rgba(34, 197, 94, 0.08)',
-                border: '1px solid rgba(34, 197, 94, 0.2)',
+                background: 'rgba(0, 136, 255, 0.08)',
+                border: '1px solid rgba(0, 136, 255, 0.2)',
                 marginBottom: '1.5rem',
               }}
               className="animate-fadeIn"
             >
-              <CheckCircle2 size={16} style={{ color: '#22C55E', flexShrink: 0 }} />
-              <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#22C55E' }}>
+              <CheckCircle2 size={16} style={{ color: '#0088FF', flexShrink: 0 }} />
+              <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0088FF' }}>
                 {finalLocationName}
               </span>
             </div>
@@ -690,7 +690,7 @@ const ReportItemPage: React.FC = () => {
               Report Summary
             </p>
             {[
-              { label: 'Type', value: status, style: { color: status === 'Lost' ? '#EF4444' : '#22C55E' } as React.CSSProperties },
+              { label: 'Type', value: status, style: { color: status === 'Lost' ? '#EF4444' : '#0088FF' } as React.CSSProperties },
               { label: 'Title', value: title },
               { label: 'Category', value: category },
               { label: 'Location', value: finalLocationName },

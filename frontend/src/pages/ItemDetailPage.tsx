@@ -7,8 +7,8 @@ import { useAuth } from '../context/AuthContext';
 
 const STATUS_STYLES: Record<Item['status'], { bg: string; color: string; border: string }> = {
   Lost: { bg: 'rgba(239, 68, 68, 0.1)', color: '#EF4444', border: 'rgba(239, 68, 68, 0.2)' },
-  Found: { bg: 'rgba(34, 197, 94, 0.1)', color: '#22C55E', border: 'rgba(34, 197, 94, 0.2)' },
-  Claimed: { bg: 'rgba(124, 58, 237, 0.1)', color: '#A78BFA', border: 'rgba(124, 58, 237, 0.2)' },
+  Found: { bg: 'rgba(0, 136, 255, 0.1)', color: '#0088FF', border: 'rgba(0, 136, 255, 0.2)' },
+  Claimed: { bg: 'rgba(0, 136, 255, 0.1)', color: '#A78BFA', border: 'rgba(0, 136, 255, 0.2)' },
 };
 
 const ItemDetailPage: React.FC = () => {
@@ -268,7 +268,7 @@ const ItemDetailPage: React.FC = () => {
                     justifyContent: 'center',
                     flexShrink: 0,
                     background: 'var(--accent-light)',
-                    border: '1px solid rgba(124, 58, 237, 0.1)',
+                    border: '1px solid rgba(0, 136, 255, 0.1)',
                   }}
                 >
                   {icon}
@@ -300,8 +300,8 @@ const ItemDetailPage: React.FC = () => {
                 padding: '1.25rem',
                 textAlign: 'center',
                 borderRadius: 'var(--radius-md)',
-                background: 'rgba(124, 58, 237, 0.08)',
-                border: '1px dashed rgba(124, 58, 237, 0.3)',
+                background: 'rgba(0, 136, 255, 0.08)',
+                border: '1px dashed rgba(0, 136, 255, 0.3)',
               }}
             >
               <p style={{ color: 'var(--text-primary)', fontSize: '0.875rem', fontWeight: 600 }}>

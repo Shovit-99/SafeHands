@@ -91,7 +91,7 @@ const TopNavbar: React.FC = () => {
             style={{
               marginLeft: '0.5rem',
               transition: 'all 0.2s ease',
-              boxShadow: '0 2px 8px rgba(204, 255, 0, 0.2)',
+              boxShadow: '0 2px 8px rgba(0, 136, 255, 0.2)',
             }}
             title={user.name}
             id="topnav-profile"

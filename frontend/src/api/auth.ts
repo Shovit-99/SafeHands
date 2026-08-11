@@ -18,11 +18,13 @@ export const registerUser = async (
 // ─── Login ────────────────────────────────────────────────────────────────────
 export const loginUser = async (
   email: string,
-  password: string
+  password: string,
+  trustToken?: string
 ): Promise<AuthResponse> => {
   const { data } = await api.post<AuthResponse>('/auth/login', {
     email,
     password,
+    trustToken,
   });
   return data;
 };

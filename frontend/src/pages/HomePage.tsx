@@ -59,19 +59,22 @@ const HomePage: React.FC = () => {
   return (
     <div className="animate-fadeInUp">
       {/* ─── Header ─── */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+      <div style={{ marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.375rem',
               padding: '0.25rem 0.75rem',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--accent-light)',
+              borderRadius: '4px',
+              background: 'var(--metal-dark)',
+              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5)',
               fontSize: '0.75rem',
-              fontWeight: 600,
-              color: 'var(--accent-purple)',
+              fontWeight: 800,
+              letterSpacing: '0.5px',
+              color: 'var(--accent-lime)',
+              textTransform: 'uppercase',
             }}
           >
             <Sparkles size={12} />
@@ -79,15 +82,17 @@ const HomePage: React.FC = () => {
           </div>
         </div>
         <h1 style={{
-          fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+          fontSize: 'clamp(2rem, 4vw, 3rem)',
           fontWeight: 800,
-          letterSpacing: '-0.03em',
-          lineHeight: 1.2,
+          letterSpacing: '-1px',
+          lineHeight: 1.1,
           marginBottom: '0.5rem',
+          textShadow: '0 4px 10px rgba(0,0,0,0.5)',
+          textTransform: 'uppercase',
         }}>
-          Browse <span className="gradient-text">Lost & Found</span> Items
+          BROWSE <span style={{ color: 'var(--accent-lime)', textShadow: '0 0 10px rgba(137,207,240,0.5)' }}>LOST & FOUND</span> ITEMS
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem', maxWidth: 500 }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', maxWidth: 500 }}>
           Search campus items or report something new.
         </p>
       </div>
@@ -291,7 +296,7 @@ const HomePage: React.FC = () => {
                   ? {
                       background: 'var(--accent-gradient)',
                       color: '#fff',
-                      boxShadow: '0 4px 14px rgba(124, 58, 237, 0.3)',
+                      boxShadow: '0 4px 14px rgba(0, 136, 255, 0.3)',
                     }
                   : {
                       background: 'var(--bg-card)',

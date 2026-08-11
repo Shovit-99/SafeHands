@@ -35,16 +35,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   return (
     <div className="dashboard-layout">
-      {/* Mesh background */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'var(--mesh-bg)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
+      {/* Vault Wires Background */}
+      <div className="bg-wires">
+        <div className="wire wire-1"></div>
+        <div className="wire wire-2"></div>
+        <div className="wire wire-3"></div>
+      </div>
 
       {/* Sidebar */}
       <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />

@@ -27,7 +27,7 @@ const NotificationsCard: React.FC = () => {
     switch (type) {
       case 'message': return <MessageCircle size={16} color="#3B82F6" />;
       case 'alert': return <Bell size={16} color="#EF4444" />;
-      default: return <Info size={16} color="#22C55E" />;
+      default: return <Info size={16} color="#0088FF" />;
     }
   };
 
@@ -35,7 +35,7 @@ const NotificationsCard: React.FC = () => {
     switch (type) {
       case 'message': return 'rgba(59, 130, 246, 0.12)';
       case 'alert': return 'rgba(239, 68, 68, 0.12)';
-      default: return 'rgba(34, 197, 94, 0.12)';
+      default: return 'rgba(0, 136, 255, 0.12)';
     }
   };
 
@@ -82,7 +82,7 @@ const NotificationsCard: React.FC = () => {
                 gap: '0.75rem',
                 padding: '0.625rem 0.5rem',
                 borderRadius: 'var(--radius-md)',
-                background: notif.read ? 'transparent' : 'rgba(124, 58, 237, 0.04)',
+                background: notif.read ? 'transparent' : 'rgba(0, 136, 255, 0.04)',
                 transition: 'background 0.2s ease',
                 cursor: 'pointer',
                 animationDelay: `${index * 0.05}s`,
@@ -93,7 +93,7 @@ const NotificationsCard: React.FC = () => {
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.background = notif.read
                   ? 'transparent'
-                  : 'rgba(124, 58, 237, 0.04)';
+                  : 'rgba(0, 136, 255, 0.04)';
               }}
             >
               <div

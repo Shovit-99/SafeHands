@@ -160,11 +160,11 @@ const SettingsPage: React.FC = () => {
                 width: 40,
                 height: 40,
                 borderRadius: 'var(--radius-md)',
-                background: 'rgba(34, 197, 94, 0.1)',
+                background: 'rgba(0, 136, 255, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#22C55E',
+                color: '#0088FF',
               }}
             >
               <Lock size={20} />
@@ -227,9 +227,9 @@ const SettingsPage: React.FC = () => {
                 padding: '0.875rem',
                 fontWeight: 700,
                 marginTop: '0.5rem',
-                background: 'rgba(34, 197, 94, 0.1)',
-                color: '#22C55E',
-                border: '1px solid rgba(34, 197, 94, 0.2)',
+                background: 'rgba(0, 136, 255, 0.1)',
+                color: '#0088FF',
+                border: '1px solid rgba(0, 136, 255, 0.2)',
                 boxShadow: 'none',
                 display: 'flex',
                 justifyContent: 'center',
@@ -237,11 +237,11 @@ const SettingsPage: React.FC = () => {
               }}
               onMouseEnter={(e) => {
                 const target = e.currentTarget;
-                target.style.background = 'rgba(34, 197, 94, 0.2)';
+                target.style.background = 'rgba(0, 136, 255, 0.2)';
               }}
               onMouseLeave={(e) => {
                 const target = e.currentTarget;
-                target.style.background = 'rgba(34, 197, 94, 0.1)';
+                target.style.background = 'rgba(0, 136, 255, 0.1)';
               }}
             >
               {securityLoading ? <Loader2 size={18} className="animate-spin" /> : <Lock size={18} />}
@@ -258,11 +258,11 @@ const SettingsPage: React.FC = () => {
                 width: 40,
                 height: 40,
                 borderRadius: 'var(--radius-md)',
-                background: is2FAEnabled ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                background: is2FAEnabled ? 'rgba(0, 136, 255, 0.1)' : 'rgba(239, 68, 68, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: is2FAEnabled ? '#22C55E' : '#EF4444',
+                color: is2FAEnabled ? '#0088FF' : '#EF4444',
               }}
             >
               {is2FAEnabled ? <ShieldCheck size={20} /> : <ShieldAlert size={20} />}
@@ -277,8 +277,8 @@ const SettingsPage: React.FC = () => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', borderRadius: 'var(--radius-md)', background: 'rgba(34, 197, 94, 0.05)', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
-            <ShieldCheck size={24} color="#22C55E" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', borderRadius: 'var(--radius-md)', background: 'rgba(0, 136, 255, 0.05)', border: '1px solid rgba(0, 136, 255, 0.2)' }}>
+            <ShieldCheck size={24} color="#0088FF" />
             <div>
               <p style={{ color: 'var(--text-primary)', fontWeight: 600 }}>2FA is active</p>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Your account is protected by mandatory two-factor authentication.</p>

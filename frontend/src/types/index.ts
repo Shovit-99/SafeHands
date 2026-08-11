@@ -18,6 +18,7 @@ export interface AuthResponse {
   tempToken?: string;
   qrCodeUrl?: string;
   secret?: string;
+  trustToken?: string;
 }
 
 // ─── Item Types ───────────────────────────────────────────────────────────────

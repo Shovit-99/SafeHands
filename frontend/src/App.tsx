@@ -44,7 +44,7 @@ function App() {
               fontSize: '0.875rem',
               boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
             },
-            success: { iconTheme: { primary: '#22C55E', secondary: '#151B2F' } },
+            success: { iconTheme: { primary: '#0088FF', secondary: '#151B2F' } },
             error: { iconTheme: { primary: '#EF4444', secondary: '#151B2F' } },
           }}
         />

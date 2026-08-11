@@ -29,7 +29,7 @@ const PieChart: React.FC<{ data: ChartData; animated: boolean }> = ({ data, anim
 
   const segments = [
     { value: data.lost, color: '#EF4444', label: 'Lost' },
-    { value: data.found, color: '#22C55E', label: 'Found' },
+    { value: data.found, color: '#0088FF', label: 'Found' },
     { value: data.claimed, color: '#3B82F6', label: 'Claimed' },
   ];
 
@@ -99,7 +99,7 @@ const BarChart: React.FC<{ animated: boolean }> = ({ animated }) => {
               height: animated ? `${(d.value / max) * 48}px` : '0px',
               background: i === WEEKLY_DATA.length - 1
                 ? 'var(--accent-gradient)'
-                : 'rgba(124, 58, 237, 0.3)',
+                : 'rgba(0, 136, 255, 0.3)',
               borderRadius: '3px 3px 0 0',
               transition: `height 0.8s cubic-bezier(0.4,0,0.2,1) ${i * 0.08}s`,
             }}

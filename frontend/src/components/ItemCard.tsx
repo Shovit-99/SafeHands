@@ -30,7 +30,13 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
-      style={{ overflow: 'hidden' }}
+      style={{ 
+        overflow: 'hidden', 
+        background: '#f4f2ea', 
+        borderRadius: '24px',
+        border: 'none',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
+      }}
     >
       {/* Image */}
       <div
@@ -91,9 +97,16 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
               backdropFilter: 'blur(8px)',
               fontSize: '0.6875rem',
               fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.375rem',
             }}
           >
-            {item.status}
+            <span style={{ 
+              width: 6, height: 6, borderRadius: '50%', 
+              background: 'currentColor' 
+            }} />
+            {item.status.toUpperCase()}
           </span>
         </div>
 
@@ -125,9 +138,9 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
           <h3
             className="line-clamp-1"
             style={{
-              fontWeight: 700,
-              fontSize: '0.9375rem',
-              color: 'var(--text-primary)',
+              fontWeight: 800,
+              fontSize: '1rem',
+              color: '#1a222c',
               letterSpacing: '-0.01em',
             }}
           >
@@ -139,9 +152,9 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
               flexShrink: 0,
               padding: '0.125rem 0.5rem',
               borderRadius: 'var(--radius-full)',
-              background: 'var(--accent-light)',
-              color: 'var(--accent-purple)',
-              fontWeight: 600,
+              background: 'rgba(59, 130, 246, 0.1)',
+              color: '#1d4ed8',
+              fontWeight: 700,
             }}
           >
             {item.category}
@@ -152,7 +165,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
           className="line-clamp-2"
           style={{
             fontSize: '0.8125rem',
-            color: 'var(--text-tertiary)',
+            color: '#4a5665',
             marginBottom: '0.75rem',
             lineHeight: 1.5,
           }}
@@ -166,18 +179,18 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             paddingTop: '0.75rem',
-            borderTop: '1px solid var(--border-subtle)',
+            borderTop: '1px solid rgba(0,0,0,0.1)',
             fontSize: '0.75rem',
-            color: 'var(--text-tertiary)',
-            fontWeight: 500,
+            color: '#4a5665',
+            fontWeight: 600,
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-            <MapPin size={12} style={{ color: 'var(--accent-purple)' }} />
+            <MapPin size={12} style={{ color: '#4a5665' }} />
             <span className="truncate" style={{ maxWidth: 110 }}>{item.locationName}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-            <Clock size={12} style={{ color: 'var(--accent-purple)' }} />
+            <Clock size={12} style={{ color: '#4a5665' }} />
             <span>{timeAgo(item.createdAt)}</span>
           </div>
         </div>

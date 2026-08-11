@@ -47,11 +47,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const login = async (email: string, password: string) => {
-    const { data } = await api.post('/auth/login', { email, password });
+    const trustToken = localStorage.getItem('safehands_trust_token') || undefined;
+    const { data } = await api.post('/auth/login', { email, password, trustToken });
     if (data.requires2FA || data.requires2FASetup) {
       return data;
     }
     persist(data.token, data.user);
+    // If the backend also refreshed the trust token, we could store it here, but it's okay not to
+    if (data.trustToken) {
+      localStorage.setItem('safehands_trust_token', data.trustToken);
+    }
     return data;
   };
 
