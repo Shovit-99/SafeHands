@@ -110,7 +110,6 @@ const ProfilePage: React.FC = () => {
       .finally(() => setLoadingItems(false));
   }, []);
 
-  const activeItems = myItems.filter((i) => i.status !== 'Claimed');
   const lostItems = myItems.filter((i) => i.status === 'Lost');
   const foundItems = myItems.filter((i) => i.status === 'Found');
   const claimedItems = myItems.filter((i) => i.status === 'Claimed');

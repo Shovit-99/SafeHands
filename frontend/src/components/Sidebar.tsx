@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Search, PlusCircle, MessageCircle,
-  BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Package, Handshake
+  BarChart3, Settings, LogOut, ChevronLeft, ChevronRight, Handshake
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
