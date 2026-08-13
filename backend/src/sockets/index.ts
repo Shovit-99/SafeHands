@@ -8,7 +8,7 @@ import { buildChatId } from '../utils/jwt';
 export const initializeSocket = (httpServer: HttpServer): SocketServer => {
   const io = new SocketServer(httpServer, {
     cors: {
-      origin: process.env.CLIENT_URL || 'http://localhost:5173',
+      origin: process.env.CLIENT_URL?.trim() || 'http://localhost:5173',
       credentials: true,
     },
   });
