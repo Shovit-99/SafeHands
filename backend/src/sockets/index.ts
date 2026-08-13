@@ -8,7 +8,18 @@ import { buildChatId } from '../utils/jwt';
 export const initializeSocket = (httpServer: HttpServer): SocketServer => {
   const io = new SocketServer(httpServer, {
     cors: {
-      origin: process.env.CLIENT_URL?.trim() || 'http://localhost:5173',
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (
+          origin.includes('localhost') ||
+          origin.includes('vercel.app') ||
+          origin === process.env.CLIENT_URL?.trim()
+        ) {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
       credentials: true,
     },
   });
